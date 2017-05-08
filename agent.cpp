@@ -91,7 +91,7 @@ void Agent::rotate(const float dt, const float direction){
 void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletTable){
 
     if(intendToShoot == true){
-        Bullet b(eye.getPosition() ,velocity, shape.getRotation());
+        Bullet b(eye.getPosition() ,velocity, shape.getRotation(), *this);
         bulletTable.insert(std::make_pair(b.getId(), b));
         intendToShoot = false;
     }

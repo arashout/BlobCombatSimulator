@@ -43,11 +43,18 @@ void Game::updatePhase(const float elapsedTime){
         Agent &thisAgent = kv.second;
         thisAgent.update(elapsedTime, mWindow);
         thisAgent.shoot(bulletMap);
+
+        // Field of vision checks!
         for(auto &kv2 : agentMap){
             Agent &thatAgent = kv2.second;
-            if(thisAgent.getId() == "Player") {
-                if(thisAgent.canSeeEntity(thisAgent, thatAgent)){
-                    std::cout << thisAgent.getId() << " sees " << thatAgent.getId() << std::ends;
+            if(thisAgent.canSeeEntity(thisAgent, thatAgent)){}
+        }
+
+        for(auto &kvBullet : bulletMap){
+            Bullet &curBullet = kvBullet.second;
+            if(thisAgent.getId() != curBullet.getParentId()){
+                if(thisAgent.canSeeEntity(thisAgent, curBullet)){
+                    std::cout << thisAgent.getId() << " sees " << curBullet.getId() << std::ends;
                 }
             }
         }
@@ -60,10 +67,6 @@ void Game::updatePhase(const float elapsedTime){
         Bullet &curBullet = kv.second; // For convienience
         curBullet.update(elapsedTime, mWindow);
         if(curBullet.isExpired()) bulletDeletionSet.insert(curBullet.getId());
-    }
-    // Collision checks with player and bullets
-    for(auto &kvBullet : bulletMap){
-        Bullet &curBullet = kvBullet.second;
     }
 }
 void Game::deletionPhase(void){

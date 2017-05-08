@@ -7,9 +7,12 @@ long Bullet::count = 0;
 
 Bullet::Bullet(const sf::Vector2f p,
                const sf::Vector2f v,
-               const float heading){
+               const float heading,
+               Entity &agent) :
+    agentParent(agent)
+{
     // ID creation
-    id = "B" + std::to_string(count);
+    id = agentParent.getId() + "B" + std::to_string(count);
     count++;
 
     // Shape setup
@@ -22,10 +25,13 @@ void Bullet::update(const float dt, const sf::RenderWindow &window){
     kinematics(dt);
     if(EDGE::INSIDE != outOfBounds(window, shape.getRadius())) expired = true;
 }
-bool Bullet::isExpired(void){
+bool Bullet::isExpired(void) const{
     return expired;
 }
 void Bullet::kinematics(const float dt){
     sf::Vector2f newPosition = shape.getPosition() + velocity*dt;
     shape.setPosition(newPosition);
+}
+std::string Bullet::getParentId(void) const{
+    return agentParent.getId();
 }
