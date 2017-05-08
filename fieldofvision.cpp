@@ -2,7 +2,9 @@
 #include "sfmlvector.hpp"
 #include <math.h>
 
-Agent::FieldOfVision::FieldOfVision(){
+Agent::FieldOfVision::FieldOfVision(Agent &parentAgent) :
+thisAgent(parentAgent)
+{
     // Dumb way of initializing rays, but there's only 3 so no big deal
     ray1[0] = sf::Vertex(sf::Vector2f(0,0), sf::Color::Green);
     ray1[1] = sf::Vertex(sf::Vector2f(0,0), sf::Color::Green);
@@ -19,15 +21,14 @@ void Agent::FieldOfVision::update(const float heading, const sf::Vector2f &posit
     curHeadingVector = SFMLVector::vectorHeading(heading);
 }
 
-bool Agent::FieldOfVision::canSeeAgent(const Agent thisAgent,const Agent thatAgent){
+bool Agent::FieldOfVision::canSeeEntity(const Agent &thisAgent, const Entity &thatEntity) const{
     // Check that agent is within viewing distance
-    sf::Vector2f agentToAgent = thisAgent.getPosition() - thatAgent.getPosition();
-    float magVal= SFMLVector::magnitude(agentToAgent);
-    if(magVal > viewingDistance) return false;
+    sf::Vector2f agentToEntity = thisAgent.getPosition() - thatEntity.getPosition();
+    if(SFMLVector::magnitude(agentToEntity) > viewingDistance) return false;
     // TODO - Factor in radius into this calculation
     // Within viewing angle
     sf::Vector2f agentFacingNorm = SFMLVector::normalize(curHeadingVector);
-    sf::Vector2f agentToAgentNorm = SFMLVector::normalize(agentToAgent);
+    sf::Vector2f agentToAgentNorm = SFMLVector::normalize(agentToEntity);
     float angle = acos(SFMLVector::dot(agentFacingNorm,agentToAgentNorm))*RAD2DEG;
     // TODO - Explain this more
     angle = (angle - 180)*-1; // To bound angle between 0 - 180
@@ -36,9 +37,6 @@ bool Agent::FieldOfVision::canSeeAgent(const Agent thisAgent,const Agent thatAge
     else return false;
 }
 
-bool Agent::FieldOfVision::canSeeBullet(const Bullet &bullet){
-    return false;
-}
 void Agent::FieldOfVision::updateRays(const float heading, const sf::Vector2f &position){
     // Update ray 1 position
     ray1[0].position = position;

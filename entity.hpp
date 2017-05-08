@@ -75,10 +75,8 @@ public:
 // Protected so that child classes have access to these
 protected:
     sf::CircleShape shape;
-    sf::CircleShape originShape;
     sf::Vector2f velocity;
     std::string id;
-    float characterLength; // For "outOfBounds" and "resetPosition" functions
     virtual void kinematics(const float dt) = 0;
 
 };

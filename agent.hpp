@@ -13,7 +13,7 @@ public:
     void update(const float dt,const sf::RenderWindow &window);
     void shoot(std::unordered_map<std::string, Bullet>& bulletTable);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-    bool canSeeAgent(const Agent thisAgent,const Agent thatAgent);
+    bool canSeeEntity(const Agent &thisAgent,const Entity &thatEntity) const;
     void setId(const std::string newId);
 private:
     // For IDs
@@ -35,12 +35,11 @@ private:
     // Field of vision
     class FieldOfVision : public sf::Drawable{
     public:
-        FieldOfVision();
+        FieldOfVision(Agent &parentAgent);
         void draw(sf::RenderTarget& target, sf::RenderStates states) const;
         void update(const float heading, const sf::Vector2f &position);
         bool isEnemyInSights(const Agent &agent);
-        bool canSeeAgent(const Agent thisAgent,const Agent thatAgent);
-        bool canSeeBullet(const Bullet &bullet);
+        bool canSeeEntity(const Agent &thisAgent,const Entity &thatEntity) const;
     private:
         sf::Vertex ray1[2]; // Heading - viewing angle
         sf::Vertex ray2[2]; // Heading + viewing angle
@@ -50,6 +49,9 @@ private:
         sf::Vector2f curHeadingVector;
 
         void updateRays(const float heading, const sf::Vector2f &position);
+        // Manually give reference to outer agent class
+        // TODO - Make this work - as of now the pointer does not work!
+        Agent &thisAgent;
 
     };
     FieldOfVision fov;

@@ -7,7 +7,9 @@
 // This is used for unique id creation
 long Agent::count = 0;
 
-Agent::Agent(const float agentRadius,const sf::Vector2f position){
+Agent::Agent(const float agentRadius,const sf::Vector2f position) :
+fov(*this) // Pass a reference of the parent to field of view
+{
     id = "Agent" + std::to_string(count);
     count++;
     // Shooting defaults
@@ -97,6 +99,6 @@ void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletTable){
 void Agent::setId(const std::string newId){
     id = newId;
 }
-bool Agent::canSeeAgent(const Agent thisAgent,const Agent thatAgent){
-    return fov.canSeeAgent(thisAgent, thatAgent);
+bool Agent::canSeeEntity(const Agent &thisAgent,const Entity &thatEntity) const{
+    return fov.canSeeEntity(thisAgent, thatEntity);
 }

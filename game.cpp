@@ -46,7 +46,7 @@ void Game::updatePhase(const float elapsedTime){
         for(auto &kv2 : agentMap){
             Agent &thatAgent = kv2.second;
             if(thisAgent.getId() == "Player") {
-                if(thisAgent.canSeeAgent(thisAgent, thatAgent)){
+                if(thisAgent.canSeeEntity(thisAgent, thatAgent)){
                     std::cout << thisAgent.getId() << " sees " << thatAgent.getId() << std::ends;
                 }
             }

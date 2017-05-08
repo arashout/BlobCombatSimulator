@@ -12,7 +12,6 @@ Bullet::Bullet(const sf::Vector2f p,
     id = "B" + std::to_string(count);
     count++;
 
-    characterLength = radius;
     // Shape setup
     shape = sf::CircleShape(radius);
     shape.setOrigin(radius, radius);
@@ -21,7 +20,7 @@ Bullet::Bullet(const sf::Vector2f p,
 }
 void Bullet::update(const float dt, const sf::RenderWindow &window){
     kinematics(dt);
-    if(EDGE::INSIDE != outOfBounds(window, characterLength)) expired = true;
+    if(EDGE::INSIDE != outOfBounds(window, shape.getRadius())) expired = true;
 }
 bool Bullet::isExpired(void){
     return expired;
