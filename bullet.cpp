@@ -12,7 +12,7 @@ Bullet::Bullet(const sf::Vector2f p,
     agentParent(agent)
 {
     // ID creation
-    id = agentParent.getId() + "B" + std::to_string(count);
+    id = "B" + std::to_string(count);
     count++;
 
     // Shape setup

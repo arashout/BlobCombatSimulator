@@ -10,7 +10,7 @@ long Agent::count = 0;
 Agent::Agent(const float agentRadius,const sf::Vector2f position) :
 fov(*this) // Pass a reference of the parent to field of view
 {
-    id = "Agent" + std::to_string(count);
+    id = "A" + std::to_string(count);
     count++;
     // Shooting defaults
     canShoot = true;
@@ -99,9 +99,9 @@ void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletTable){
 void Agent::setId(const std::string newId){
     id = newId;
 }
-bool Agent::canSeeEntity(const Agent &thisAgent,const Entity &thatEntity) const{
-    return fov.canSeeEntity(thisAgent, thatEntity);
+bool Agent::canSeeEntity(const Entity &thatEntity) const{
+    return fov.canSeeEntity(*this, thatEntity);
 }
-bool Agent::hasAgentInSights(const Agent &thisAgent, const Agent &thatAgent) const{
-    return fov.hasAgentInSights(thisAgent, thatAgent);
+bool Agent::hasAgentInSights(const Agent &thatAgent) const{
+    return fov.hasAgentInSights(*this, thatAgent);
 }

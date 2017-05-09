@@ -13,8 +13,8 @@ public:
     void update(const float dt,const sf::RenderWindow &window);
     void shoot(std::unordered_map<std::string, Bullet>& bulletTable);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-    bool hasAgentInSights(const Agent &thisAgent, const Agent &thatAgent) const;
-    bool canSeeEntity(const Agent &thisAgent,const Entity &thatEntity) const;
+    bool hasAgentInSights(const Agent &thatAgent) const;
+    bool canSeeEntity(const Entity &thatEntity) const;
     void setId(const std::string newId);
 private:
     // For IDs

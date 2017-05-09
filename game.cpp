@@ -47,8 +47,10 @@ void Game::updatePhase(const float elapsedTime){
         // Field of vision checks!
         for(auto &kv2 : agentMap){
             Agent &thatAgent = kv2.second;
-            if(thisAgent.canSeeEntity(thisAgent, thatAgent)){}
-            if(thisAgent.hasAgentInSights(thisAgent, thatAgent)){
+            if(thisAgent.canSeeEntity(thatAgent)){
+                std::cout << thisAgent.getId() << " sees " << thatAgent.getId();
+            }
+            if(thisAgent.hasAgentInSights(thatAgent)){
                 std::cout << thisAgent.getId() << " has " << thatAgent.getId() << std::ends;
             }
         }
@@ -56,7 +58,7 @@ void Game::updatePhase(const float elapsedTime){
         for(auto &kvBullet : bulletMap){
             Bullet &curBullet = kvBullet.second;
             if(thisAgent.getId() != curBullet.getParentId()){
-                if(thisAgent.canSeeEntity(thisAgent, curBullet)){
+                if(thisAgent.canSeeEntity(curBullet)){
                     std::cout << thisAgent.getId() << " sees " << curBullet.getId() << std::ends;
                 }
             }
