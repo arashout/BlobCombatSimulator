@@ -102,3 +102,6 @@ void Agent::setId(const std::string newId){
 bool Agent::canSeeEntity(const Agent &thisAgent,const Entity &thatEntity) const{
     return fov.canSeeEntity(thisAgent, thatEntity);
 }
+bool Agent::hasAgentInSights(const Agent &thisAgent, const Agent &thatAgent) const{
+    return fov.hasAgentInSights(thisAgent, thatAgent);
+}

@@ -48,6 +48,9 @@ void Game::updatePhase(const float elapsedTime){
         for(auto &kv2 : agentMap){
             Agent &thatAgent = kv2.second;
             if(thisAgent.canSeeEntity(thisAgent, thatAgent)){}
+            if(thisAgent.hasAgentInSights(thisAgent, thatAgent)){
+                std::cout << thisAgent.getId() << " has " << thatAgent.getId() << std::ends;
+            }
         }
 
         for(auto &kvBullet : bulletMap){

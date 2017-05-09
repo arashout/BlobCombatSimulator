@@ -13,6 +13,7 @@ public:
     void update(const float dt,const sf::RenderWindow &window);
     void shoot(std::unordered_map<std::string, Bullet>& bulletTable);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    bool hasAgentInSights(const Agent &thisAgent, const Agent &thatAgent) const;
     bool canSeeEntity(const Agent &thisAgent,const Entity &thatEntity) const;
     void setId(const std::string newId);
 private:
@@ -38,11 +39,12 @@ private:
         FieldOfVision(Agent &parentAgent);
         void draw(sf::RenderTarget& target, sf::RenderStates states) const;
         void update(const float heading, const sf::Vector2f &position);
-        bool isEnemyInSights(const Agent &agent);
+        bool hasAgentInSights(const Agent &thisAgent, const Agent &thatAgent) const;
         bool canSeeEntity(const Agent &thisAgent,const Entity &thatEntity) const;
     private:
         sf::Vertex ray1[2]; // Heading - viewing angle
         sf::Vertex ray2[2]; // Heading + viewing angle
+        sf::Vertex raySights[2]; // Sight representing bullet trajectory
 
         const float viewingAngle = 50;
         const float viewingDistance = 400;
