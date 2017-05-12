@@ -119,14 +119,14 @@ bool Agent::nearbyBullets(std::unordered_map<std::string, Bullet> &bulletMap){
     for(auto &kvBullet : bulletMap){
         Bullet &b = kvBullet.second;
         // If it's not your own bullet
-        if(getId() != b.getParentId()){
+        if(id != b.getParentId()){
             if(canSeeEntity(b)) seesBullet = true;
 
             // Technically shouldn't be doing collision checks here
             // But doing it somewhere else will require another for loop
             bool isBulletCollision = SFMLVector::circToCircCollision(
                         b.getShape(),
-                        getShape()
+                        shape
                         );
             if(isBulletCollision){
                 isDead = true;
