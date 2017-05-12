@@ -106,27 +106,27 @@ bool Agent::canSeeEntity(const Entity &thatEntity) const{
 bool Agent::hasAgentInSights(const Agent &thatAgent) const{
     return fov.hasAgentInSights(*this, thatAgent);
 }
-void Agent::getInput(
+Eigen::VectorXf Agent::getInputVector(
         const std::unordered_map<std::string, Agent>& agentMap,
-        std::unordered_map<std::string, Bullet>& bulletMap
-        ){
-    const Agent &thisAgent = *this;
-    // Agent Field of vision checks!
-    for(auto &kv2 : agentMap){
-        const Agent &thatAgent = kv2.second;
-        if(thisAgent.canSeeEntity(thatAgent)){}
-        if(thisAgent.hasAgentInSights(thatAgent)){}
-    }
+        std::unordered_map<std::string, Bullet>& bulletMap,
+        const sf::RenderWindow &window){
+
+}
+
+bool Agent::nearbyBullets(std::unordered_map<std::string, Bullet> &bulletMap){
+    bool seesBullet = false;
     // Bullet Field of vision checks and collision
     for(auto &kvBullet : bulletMap){
         Bullet &b = kvBullet.second;
         // If it's not your own bullet
-        if(thisAgent.getId() != b.getParentId()){
-            if(thisAgent.canSeeEntity(b)){}
-            // I technically shouldn't be doing this here!
+        if(getId() != b.getParentId()){
+            if(canSeeEntity(b)) seesBullet = true;
+
+            // Technically shouldn't be doing collision checks here
+            // But doing it somewhere else will require another for loop
             bool isBulletCollision = SFMLVector::circToCircCollision(
                         b.getShape(),
-                        thisAgent.getShape()
+                        getShape()
                         );
             if(isBulletCollision){
                 isDead = true;
@@ -134,7 +134,17 @@ void Agent::getInput(
             }
         }
     }
+    return seesBullet;
 }
+bool Agent::nearbyAgents(const std::unordered_map<std::string, Agent> &agentMap){
+    // Agent Field of vision checks!
+    for(auto &kv2 : agentMap){
+        const Agent &thatAgent = kv2.second;
+        if(canSeeEntity(thatAgent)){}
+        if(hasAgentInSights(thatAgent)){}
+    }
+}
+
 bool Agent::hasDied(void){
     return isDead;
 }

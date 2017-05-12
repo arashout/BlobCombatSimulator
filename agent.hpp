@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include "bullet.hpp"
 #include <SFML/Graphics/Vertex.hpp>
+#include <Eigen/Core>
 
 class Agent : public Entity
 {
@@ -17,10 +18,12 @@ public:
     bool canSeeEntity(const Entity &thatEntity) const;
     void setId(const std::string newId);
     bool hasDied(void);
-    void getInput(
-            const std::unordered_map<std::__cxx11::string, Agent> &agentMap,
-            std::unordered_map<std::__cxx11::string, Bullet> &bulletMap
+    Eigen::VectorXf getInputVector(
+            const std::unordered_map<std::string, Agent> &agentMap,
+            std::unordered_map<std::string, Bullet> &bulletMap,
+            const sf::RenderWindow &window
             );
+    void executeInput(std::unordered_map<std::string, Bullet>& bulletMap);
 private:
     // For IDs
     static long count;
@@ -31,14 +34,30 @@ private:
     // Additional force on keypress
     const float thrustPower = 250;
     const float rotatePower = 250;
-    // Life
+    // Statistics
     bool isDead;
+    float timeAlive;
+    unsigned kills;
+    float score;
 
-    // Shooting parameters
+    // Shooting status
     const float shotChargeTime = .1; // Time [s] to pass before next shot
     float shotTimer;
     bool canShoot;
     bool intendToShoot;
+
+    // Eye aesthetics
+    sf::CircleShape eye;
+    const float eyeRadius = 3;
+
+    void applyInputs(const float dt);
+    void kinematics(const float dt);
+    void thrust(const float dt, const float direction);
+    void rotate(const float dt, const float direction);
+
+    // Helper methods
+    bool nearbyBullets(std::unordered_map<std::string, Bullet> &bulletMap);
+    bool nearbyAgents(const std::unordered_map<std::string, Agent> &agentMap);
 
     // Field of vision
     class FieldOfVision : public sf::Drawable{
@@ -64,15 +83,6 @@ private:
 
     };
     FieldOfVision fov;
-
-    // Eye aesthetics
-    sf::CircleShape eye;
-    const float eyeRadius = 3;
-
-    void applyInputs(const float dt);
-    void kinematics(const float dt);
-    void thrust(const float dt, const float direction);
-    void rotate(const float dt, const float direction);
 };
 
 #endif // AGENT_HPP
