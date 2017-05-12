@@ -12,11 +12,13 @@ fov(*this) // Pass a reference of the parent to field of view
 {
     id = "A" + std::to_string(count);
     count++;
-    // Boolean defaults
+    // Defaults
     canShoot = true;
     intendToShoot = false;
     isDead = false;
-    // Shoot timer ready to go
+    timeAlive = 0.0;
+    kills = 0;
+    score = 0;
     shotTimer = shotChargeTime;
 
     // Ship shape and colour adjusted here
@@ -45,13 +47,14 @@ void Agent::update(const float dt, const sf::RenderWindow &window){
     kinematics(dt);
     fov.update(shape.getRotation(), eye.getPosition());
     // Mirror edges - Like in PACMAN
-    resetPosition(outOfBounds(window, shape.getRadius()),
-                  window, shape.getRadius());
+    resetPosition(outOfBounds(window, shape.getRadius()), window, shape.getRadius());
     // Recharge shot
     if(shotTimer >= shotChargeTime) canShoot = true;
     else if(shotTimer < shotChargeTime){
         shotTimer += dt;
     }
+
+    timeAlive += dt;
 }
 
 void Agent::kinematics(const float dt){
@@ -110,6 +113,9 @@ Eigen::VectorXf Agent::getInputVector(
         const std::unordered_map<std::string, Agent>& agentMap,
         std::unordered_map<std::string, Bullet>& bulletMap,
         const sf::RenderWindow &window){
+    nearbyAgents(agentMap);
+    nearbyBullets(bulletMap);
+    return Eigen::VectorXf::Constant(1,1.0);
 
 }
 

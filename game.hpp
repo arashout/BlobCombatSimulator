@@ -16,7 +16,9 @@ private:
     sf::RenderWindow &mWindow;
     std::unordered_map<std::string, Bullet> bulletMap;
     std::unordered_set<std::string> bulletDeletionSet;
-    std::unordered_map<std::string, Agent> agentMap;
+    std::unordered_map<std::string, Agent> activeAgentMap;
+    std::unordered_map<std::string, Agent> deadAgentMap;
+    std::unordered_set<std::string> deadAgentIds;
 
     void handleEvents(void);
     void updatePhase(const float elapsedTime);
