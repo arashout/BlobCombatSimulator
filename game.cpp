@@ -41,10 +41,11 @@ void Game::updatePhase(const float elapsedTime){
     // Agent Updates
     for(auto &kv : agentMap){
         Agent &thisAgent = kv.second;
-        thisAgent.update(elapsedTime, mWindow);
-        thisAgent.shoot(bulletMap);
-        thisAgent.getInput(agentMap, bulletMap);
-        if(thisAgent.hasDied()) agentDeletionSet.insert(thisAgent.getId());
+        if(!thisAgent.hasDied()){
+            thisAgent.update(elapsedTime, mWindow);
+            thisAgent.shoot(bulletMap);
+            thisAgent.getInputVector(agentMap, bulletMap, mWindow);
+        }
     }
 
     // Bullet updates - With range-for loop
@@ -56,11 +57,6 @@ void Game::updatePhase(const float elapsedTime){
     }
 }
 void Game::deletionPhase(void){
-    for(auto &agentId : agentDeletionSet){
-        agentMap.erase(agentId);
-    }
-    agentDeletionSet.clear();
-
     for(auto &bulletId : bulletDeletionSet){
         bulletMap.erase(bulletId);
     }
@@ -69,14 +65,15 @@ void Game::deletionPhase(void){
 
 void Game::drawPhase(void){
     for(auto &kv : agentMap){
-        Agent &curAgent = kv.second;
-        mWindow.draw(curAgent);
+        Agent &thisAgent = kv.second;
+        if(!thisAgent.hasDied()) mWindow.draw(thisAgent);
     }
     for(auto &kv : bulletMap){
         Bullet &curBullet = kv.second;
         mWindow.draw(curBullet);
     }
 }
+
 void Game::handleEvents(void){
     sf::Event event;
     // check all the window's events that were triggered since the last iteration of the loop
