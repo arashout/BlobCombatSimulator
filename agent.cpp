@@ -12,9 +12,11 @@ fov(*this) // Pass a reference of the parent to field of view
 {
     id = "A" + std::to_string(count);
     count++;
-    // Shooting defaults
+    // Boolean defaults
     canShoot = true;
     intendToShoot = false;
+    isDead = false;
+    // Shoot timer ready to go
     shotTimer = shotChargeTime;
 
     // Ship shape and colour adjusted here
@@ -50,7 +52,6 @@ void Agent::update(const float dt, const sf::RenderWindow &window){
     else if(shotTimer < shotChargeTime){
         shotTimer += dt;
     }
-
 }
 
 void Agent::kinematics(const float dt){
@@ -88,11 +89,11 @@ void Agent::rotate(const float dt, const float direction){
     shape.rotate(dt*direction*rotatePower);
 }
 
-void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletTable){
-
+void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletMap){
+    Agent &thisAgent = *this;
     if(intendToShoot == true){
-        Bullet b(eye.getPosition() ,velocity, shape.getRotation(), *this);
-        bulletTable.insert(std::make_pair(b.getId(), b));
+        Bullet b(eye.getPosition() ,velocity, shape.getRotation(), thisAgent);
+        bulletMap.insert(std::make_pair(b.getId(), b));
         intendToShoot = false;
     }
 }
@@ -104,4 +105,36 @@ bool Agent::canSeeEntity(const Entity &thatEntity) const{
 }
 bool Agent::hasAgentInSights(const Agent &thatAgent) const{
     return fov.hasAgentInSights(*this, thatAgent);
+}
+void Agent::getInput(
+        const std::unordered_map<std::string, Agent>& agentMap,
+        std::unordered_map<std::string, Bullet>& bulletMap
+        ){
+    const Agent &thisAgent = *this;
+    // Agent Field of vision checks!
+    for(auto &kv2 : agentMap){
+        const Agent &thatAgent = kv2.second;
+        if(thisAgent.canSeeEntity(thatAgent)){}
+        if(thisAgent.hasAgentInSights(thatAgent)){}
+    }
+    // Bullet Field of vision checks and collision
+    for(auto &kvBullet : bulletMap){
+        Bullet &b = kvBullet.second;
+        // If it's not your own bullet
+        if(thisAgent.getId() != b.getParentId()){
+            if(thisAgent.canSeeEntity(b)){}
+            // I technically shouldn't be doing this here!
+            bool isBulletCollision = SFMLVector::circToCircCollision(
+                        b.getShape(),
+                        thisAgent.getShape()
+                        );
+            if(isBulletCollision){
+                isDead = true;
+                b.setExpiry(true);
+            }
+        }
+    }
+}
+bool Agent::hasDied(void){
+    return isDead;
 }

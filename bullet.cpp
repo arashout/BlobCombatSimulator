@@ -28,6 +28,10 @@ void Bullet::update(const float dt, const sf::RenderWindow &window){
 bool Bullet::isExpired(void) const{
     return expired;
 }
+void Bullet::setExpiry(bool expiryValue){
+    expired = expiryValue;
+}
+
 void Bullet::kinematics(const float dt){
     sf::Vector2f newPosition = shape.getPosition() + velocity*dt;
     shape.setPosition(newPosition);

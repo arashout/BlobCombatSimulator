@@ -43,38 +43,24 @@ void Game::updatePhase(const float elapsedTime){
         Agent &thisAgent = kv.second;
         thisAgent.update(elapsedTime, mWindow);
         thisAgent.shoot(bulletMap);
-
-        // Field of vision checks!
-        for(auto &kv2 : agentMap){
-            Agent &thatAgent = kv2.second;
-            if(thisAgent.canSeeEntity(thatAgent)){
-                std::cout << thisAgent.getId() << " sees " << thatAgent.getId();
-            }
-            if(thisAgent.hasAgentInSights(thatAgent)){
-                std::cout << thisAgent.getId() << " has " << thatAgent.getId() << std::ends;
-            }
-        }
-
-        for(auto &kvBullet : bulletMap){
-            Bullet &curBullet = kvBullet.second;
-            if(thisAgent.getId() != curBullet.getParentId()){
-                if(thisAgent.canSeeEntity(curBullet)){
-                    std::cout << thisAgent.getId() << " sees " << curBullet.getId() << std::ends;
-                }
-            }
-        }
+        thisAgent.getInput(agentMap, bulletMap);
+        if(thisAgent.hasDied()) agentDeletionSet.insert(thisAgent.getId());
     }
 
     // Bullet updates - With range-for loop
     for(auto &kv : bulletMap)
     {
-      // Note: "kv" is std::pair<std::string, Bullet>&
-        Bullet &curBullet = kv.second; // For convienience
+        Bullet &curBullet = kv.second;
         curBullet.update(elapsedTime, mWindow);
         if(curBullet.isExpired()) bulletDeletionSet.insert(curBullet.getId());
     }
 }
 void Game::deletionPhase(void){
+    for(auto &agentId : agentDeletionSet){
+        agentMap.erase(agentId);
+    }
+    agentDeletionSet.clear();
+
     for(auto &bulletId : bulletDeletionSet){
         bulletMap.erase(bulletId);
     }

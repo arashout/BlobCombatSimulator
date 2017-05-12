@@ -12,6 +12,7 @@ public:
            const float heading, Entity &agent);
     void update(const float dt,const sf::RenderWindow &window);
     bool isExpired(void) const;
+    void setExpiry(bool expiryValue);
     std::string getParentId(void) const;
 
 private:

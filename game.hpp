@@ -17,6 +17,7 @@ private:
     std::unordered_map<std::string, Bullet> bulletMap;
     std::unordered_set<std::string> bulletDeletionSet;
     std::unordered_map<std::string, Agent> agentMap;
+    std::unordered_set<std::string> agentDeletionSet;
     unsigned score;
 
     void handleEvents(void);

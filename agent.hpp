@@ -11,11 +11,16 @@ class Agent : public Entity
 public:
     Agent(const float agentRadius, const sf::Vector2f position);
     void update(const float dt,const sf::RenderWindow &window);
-    void shoot(std::unordered_map<std::string, Bullet>& bulletTable);
+    void shoot(std::unordered_map<std::string, Bullet>& bulletMap);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     bool hasAgentInSights(const Agent &thatAgent) const;
     bool canSeeEntity(const Entity &thatEntity) const;
     void setId(const std::string newId);
+    bool hasDied(void);
+    void getInput(
+            const std::unordered_map<std::__cxx11::string, Agent> &agentMap,
+            std::unordered_map<std::__cxx11::string, Bullet> &bulletMap
+            );
 private:
     // For IDs
     static long count;
@@ -26,6 +31,8 @@ private:
     // Additional force on keypress
     const float thrustPower = 250;
     const float rotatePower = 250;
+    // Life
+    bool isDead;
 
     // Shooting parameters
     const float shotChargeTime = .1; // Time [s] to pass before next shot
