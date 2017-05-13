@@ -31,4 +31,5 @@ HEADERS += \
     agent.hpp \
     game.hpp \
     dna.h \
-    neuralnetwork.hpp
+    neuralnetwork.hpp \
+    nnparameters.hpp

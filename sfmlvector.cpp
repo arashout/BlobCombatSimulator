@@ -57,7 +57,7 @@ sf::Vector2f SFMLVector::getRandVector(const float vMin, const float vMax){
 }
 
 EDGE SFMLVector::getRandEdge(){
-    return static_cast<EDGE>(rand() % LASTENUM);
+    return static_cast<EDGE>(rand() % LAST_ENUM);
 }
 
 sf::Vector2f SFMLVector::getRandPosition(const EDGE edge,

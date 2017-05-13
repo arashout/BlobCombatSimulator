@@ -1,8 +1,9 @@
 #include "dna.h"
+#include "nnparameters.hpp"
 
-DNA::DNA() : brain(topology)
+DNA::DNA() : brain(nnParam::topology)
 {
 }
 
-DNA::DNA(NeuralNetwork &nn) : brain(topology){
+DNA::DNA(NeuralNetwork &nn) : brain(nnParam::topology){
 }

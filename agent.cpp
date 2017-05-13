@@ -3,12 +3,13 @@
 #include "sfmlvector.hpp"
 #include <math.h>
 #include <iostream>
+#include "nnparameters.hpp"
 
 // This is used for unique id creation
 long Agent::idCount = 0;
 
 Agent::Agent(const float agentRadius,const sf::Vector2f position) :
-fov(*this) // Pass a reference of the parent to field of view
+fov(*this), inputVector(NUM_INPUTS)
 {
     id = "A" + std::to_string(idCount);
     idCount++;
@@ -103,36 +104,37 @@ void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletMap){
         intendToShoot = false;
     }
 }
+
 void Agent::setId(const std::string newId){
     id = newId;
 }
+
 bool Agent::canSeeEntity(const Entity &thatEntity) const{
     return fov.canSeeEntity(*this, thatEntity);
 }
+
 bool Agent::hasAgentInSights(const Agent &thatAgent) const{
     return fov.hasAgentInSights(*this, thatAgent);
 }
-Eigen::VectorXf Agent::getInputVector(
+
+void Agent::fillInputVector(
         const std::unordered_map<std::string, Agent>& agentMap,
         std::unordered_map<std::string, Bullet>& bulletMap,
         const sf::RenderWindow &window){
-    nearbyAgents(agentMap);
-    nearbyBullets(bulletMap);
-    return Eigen::VectorXf::Constant(1,1.0);
 
+    checkAgents(agentMap);
+    checkBullets(bulletMap);
 }
 
-bool Agent::nearbyBullets(std::unordered_map<std::string, Bullet> &bulletMap){
-    bool seesBullet = false;
+void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){
     // Bullet Field of vision checks and collision
+    inputVector(nnParam::seeBulletIndex) = nnParam::floatFalse;
     for(auto &kvBullet : bulletMap){
         Bullet &b = kvBullet.second;
         // If it's not your own bullet
         if(id != b.getParentId()){
-            if(canSeeEntity(b)) seesBullet = true;
+            if(canSeeEntity(b)) inputVector(nnParam::seeBulletIndex) = nnParam::seeBulletIndex;
 
-            // Technically shouldn't be doing collision checks here
-            // But doing it somewhere else will require another for loop
             bool isBulletCollision = SFMLVector::circToCircCollision(
                         b.getShape(),
                         shape
@@ -143,14 +145,19 @@ bool Agent::nearbyBullets(std::unordered_map<std::string, Bullet> &bulletMap){
             }
         }
     }
-    return seesBullet;
 }
-bool Agent::nearbyAgents(const std::unordered_map<std::string, Agent> &agentMap){
+
+void Agent::checkAgents(const std::unordered_map<std::string, Agent> &agentMap){
     // Agent Field of vision checks!
+    inputVector(nnParam::sightsIndex) = nnParam::floatFalse;
+    inputVector(nnParam::seeAgentIndex) = nnParam::floatFalse;
+
     for(auto &kv2 : agentMap){
         const Agent &thatAgent = kv2.second;
-        if(canSeeEntity(thatAgent)){}
-        if(hasAgentInSights(thatAgent)){}
+
+        if(hasAgentInSights(thatAgent)) inputVector(nnParam::seeAgentIndex) = nnParam::floatTrue;
+
+        if(canSeeEntity(thatAgent)) inputVector(nnParam::seeAgentIndex) = nnParam::floatTrue;
     }
 }
 

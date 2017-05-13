@@ -8,6 +8,8 @@
 #include <Eigen/Core>
 #include <dna.h>
 
+
+
 class Agent : public Entity
 {
 public:
@@ -19,11 +21,11 @@ public:
     bool canSeeEntity(const Entity &thatEntity) const;
     void setId(const std::string newId);
     bool hasDied(void);
-    Eigen::VectorXf getInputVector(
+    void fillInputVector(
             const std::unordered_map<std::string, Agent> &agentMap,
             std::unordered_map<std::string, Bullet> &bulletMap,
             const sf::RenderWindow &window
-            );
+        );
     void executeInput(std::unordered_map<std::string, Bullet>& bulletMap);
 private:
     static long idCount;
@@ -51,8 +53,8 @@ private:
     void thrust(const float dt, const float direction);
     void rotate(const float dt, const float direction);
 
-    bool nearbyBullets(std::unordered_map<std::string, Bullet> &bulletMap);
-    bool nearbyAgents(const std::unordered_map<std::string, Agent> &agentMap);
+    void checkBullets(std::unordered_map<std::string, Bullet> &bulletMap);
+    void checkAgents(const std::unordered_map<std::string, Agent> &agentMap);
 
     class FieldOfVision : public sf::Drawable{
     public:
@@ -79,6 +81,7 @@ private:
     FieldOfVision fov;
 
     DNA dna;
+    Eigen::VectorXf inputVector;
 
 };
 

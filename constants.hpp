@@ -8,7 +8,7 @@
 #define RAD2DEG 180/PI;
 // rand() % LASTENUM
 // gives us a random edge not including INSIDE!
-#define LASTENUM 4
+#define LAST_ENUM 4
 
 enum class EDGE : short {TOP, BOTTOM, RIGHT, LEFT, INSIDE};
 

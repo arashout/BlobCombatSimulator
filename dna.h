@@ -3,8 +3,6 @@
 
 #include "neuralnetwork.hpp"
 
-const std::vector<unsigned> topology {5, 15, 5};
-
 class DNA
 {
 public:
