@@ -91,6 +91,7 @@ void Agent::express(const float dt, std::unordered_map<std::string, Bullet>& bul
     Eigen::VectorXf outputVector = dna.brain.computePrediction();
     shoot(bulletMap, outputVector(nnParam::shootIndex));
     thrust(dt, outputVector(nnParam::thrustIndex) );
+    // TODO: Should test rotations with debugger
     if(outputVector(nnParam::rotateRightIndex) == 1.0f) rotate(dt, 1);
     else if(outputVector(nnParam::rotateLeftIndex == 1.0f)) rotate(dt, -1);
 }

@@ -45,6 +45,8 @@ bool Agent::FieldOfVision::hasAgentInSights(const Agent &thisAgent, const Agent 
     // Normalize
     sf::Vector2f agentToAgentNorm = SFMLVector::normalize(agentToAgent);
     float dotProduct = SFMLVector::dot(curHeadingVector,agentToAgentNorm);
+    // TODO: This intersection code doesn't work!
+    // Look at the way wolfram does it
     if(dotProduct == 1.0f) {
         std::cout << "Agent in sights ";
         return true;
