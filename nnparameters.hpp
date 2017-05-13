@@ -17,8 +17,16 @@ namespace nnParam {
     const unsigned short posXIndex = 4;
     const unsigned short posYIndex = 5;
 
-    const std::vector<unsigned> topology {NUM_INPUTS, 15, NUM_OUTPUTS};
     const unsigned numOutputs = NUM_OUTPUTS;
+    const unsigned short shootIndex = 0;
+    const unsigned short thrustIndex = 1;
+    const unsigned short rotateLeftIndex = 2;
+    const unsigned short rotateRightIndex = 3;
+
+
+    const std::vector<unsigned> topology {NUM_INPUTS, 15, NUM_OUTPUTS};
+
+
 
 }
 #endif // NNPARAMETERS_HPP

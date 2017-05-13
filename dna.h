@@ -9,8 +9,9 @@ public:
     DNA();
     DNA(NeuralNetwork &nn);
     void mutate();
-private:
     NeuralNetwork brain;
+private:
+
 };
 
 #endif // DNA_H

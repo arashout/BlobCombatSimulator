@@ -48,6 +48,8 @@ void Agent::draw(sf::RenderTarget& target, sf::RenderStates states) const{
 
 void Agent::update(const float dt, const sf::RenderWindow &window){
     if(id == "Player") applyInputs(dt);
+    else express(dt);
+
     kinematics(dt);
     fov.update(shape.getRotation(), eye.getPosition());
     // Mirror edges - Like in PACMAN
@@ -81,6 +83,11 @@ void Agent::applyInputs(const float dt){
         shotTimer = 0;
         canShoot = false;
     }
+}
+
+void Agent::express(const float dt){
+     Eigen::VectorXf outputVector = dna.brain.feedforward(inputVector);
+     thrust(dt, inputVector(nnParam::thrustIndex) );
 }
 
 void Agent::thrust(const float dt, const float direction){
@@ -124,6 +131,14 @@ void Agent::fillInputVector(
 
     checkAgents(agentMap);
     checkBullets(bulletMap);
+    inputVector(nnParam::shotTimerIndex) = computeNormalizedShotTimer();
+    sf::Vector2f normalizedPosition = computeNormalizedPosition(
+                shape.getPosition(),
+                window.getSize().x,
+                window.getSize().y
+                );
+    inputVector(nnParam::posXIndex) = normalizedPosition.x;
+    inputVector(nnParam::posYIndex) = normalizedPosition.y;
 }
 
 void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){
@@ -161,6 +176,15 @@ void Agent::checkAgents(const std::unordered_map<std::string, Agent> &agentMap){
     }
 }
 
+float Agent::computeNormalizedShotTimer(void) const{
+    return shotTimer/shotChargeTime;
+}
+
+sf::Vector2f Agent::computeNormalizedPosition(const sf::Vector2f &pos, const float xMax, const float yMax) const{
+    float normX = pos.x/xMax;
+    float normY = pos.y/yMax;
+    return sf::Vector2f(normX, normY);
+}
 bool Agent::hasDied(void){
     return isDead;
 }

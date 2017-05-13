@@ -36,7 +36,7 @@ NeuralNetwork::NeuralNetwork(const std::vector<unsigned> &topology)
     }
 }
 
-void NeuralNetwork::feedforward(const Eigen::VectorXf &inputs){
+Eigen::VectorXf NeuralNetwork::feedforward(const Eigen::VectorXf &inputs){
     // Set input layer to have given input values
     layers[0] = inputs;
     // Implement feed forward
@@ -52,6 +52,7 @@ void NeuralNetwork::feedforward(const Eigen::VectorXf &inputs){
         // Activation function
         nextLayer = nextLayer.unaryExpr(std::ptr_fun(activationFunction));
     }
+    return layers.back();
 }
 
 void NeuralNetwork::displayLayers(void) const{
