@@ -45,7 +45,10 @@ bool Agent::FieldOfVision::hasAgentInSights(const Agent &thisAgent, const Agent 
     // Normalize
     sf::Vector2f agentToAgentNorm = SFMLVector::normalize(agentToAgent);
     float dotProduct = SFMLVector::dot(curHeadingVector,agentToAgentNorm);
-    if(dotProduct == 1.0f) return true;
+    if(dotProduct == 1.0f) {
+        std::cout << "Agent in sights ";
+        return true;
+    }
     else return false;
 }
 void Agent::FieldOfVision::updateRays(const float heading, const sf::Vector2f &position){
