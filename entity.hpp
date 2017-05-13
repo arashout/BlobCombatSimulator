@@ -18,7 +18,10 @@ public:
     // Pure virtual function to be overrided (Thus the "= 0")
     virtual void update(const float dt,const sf::RenderWindow &window) = 0;
     // Allows us to do "window.draw(child of Entity);"
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {target.draw(shape);}
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {
+        target.draw(shape);
+        UNUSED(states);
+    }
 
     virtual std::string getId(void) const{return id;}
 

@@ -6,6 +6,7 @@
 #include "bullet.hpp"
 #include <SFML/Graphics/Vertex.hpp>
 #include <Eigen/Core>
+#include <dna.h>
 
 class Agent : public Entity
 {
@@ -76,6 +77,9 @@ private:
 
     };
     FieldOfVision fov;
+
+    DNA dna;
+
 };
 
 #endif // AGENT_HPP

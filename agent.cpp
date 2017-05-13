@@ -41,6 +41,8 @@ void Agent::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     target.draw(shape);
     // Draw eye
     target.draw(eye);
+
+    UNUSED(states);
 }
 
 void Agent::update(const float dt, const sf::RenderWindow &window){

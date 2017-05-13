@@ -12,4 +12,8 @@
 
 enum class EDGE : short {TOP, BOTTOM, RIGHT, LEFT, INSIDE};
 
+// This is for getting rid of compiler warnings!
+// It gets optimized during build
+#define UNUSED(p) ((p)=(p))
+
 #endif // CONSTANTS_HPP

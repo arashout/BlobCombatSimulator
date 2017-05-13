@@ -17,6 +17,7 @@ void Agent::FieldOfVision::draw(sf::RenderTarget& target, sf::RenderStates state
     target.draw(ray1, 2, sf::Lines);
     target.draw(ray2, 2, sf::Lines);
     target.draw(raySights, 2, sf::Lines);
+    UNUSED(states);
 }
 void Agent::FieldOfVision::update(const float heading, const sf::Vector2f &position){
     updateRays(heading, position);
