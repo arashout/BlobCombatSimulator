@@ -5,13 +5,13 @@
 #include <iostream>
 
 // This is used for unique id creation
-long Agent::count = 0;
+long Agent::idCount = 0;
 
 Agent::Agent(const float agentRadius,const sf::Vector2f position) :
 fov(*this) // Pass a reference of the parent to field of view
 {
-    id = "A" + std::to_string(count);
-    count++;
+    id = "A" + std::to_string(idCount);
+    idCount++;
     // Defaults
     canShoot = true;
     intendToShoot = false;
@@ -42,6 +42,7 @@ void Agent::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     // Draw eye
     target.draw(eye);
 }
+
 void Agent::update(const float dt, const sf::RenderWindow &window){
     if(id == "Player") applyInputs(dt);
     kinematics(dt);

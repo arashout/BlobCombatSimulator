@@ -3,13 +3,15 @@
 
 #include "entity.hpp"
 
-
 class Bullet : public Entity
 {
 public:
-    Bullet(const sf::Vector2f p,
+    Bullet(
+           const sf::Vector2f p,
            const sf::Vector2f v,
-           const float heading, Entity &agent);
+           const float heading,
+           Entity &agent
+    );
     void update(const float dt,const sf::RenderWindow &window);
     bool isExpired(void) const;
     void setExpiry(bool expiryValue);

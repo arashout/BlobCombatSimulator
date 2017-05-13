@@ -8,7 +8,9 @@ SOURCES += main.cpp \
     sfmlvector.cpp \
     agent.cpp \
     game.cpp \
-    fieldofvision.cpp
+    fieldofvision.cpp \
+    dna.cpp \
+    neuralnetwork.cpp
 
 LIBS += -L"/home/arash/SFML/lib"
 
@@ -27,4 +29,6 @@ HEADERS += \
     entity.hpp \
     sfmlvector.hpp \
     agent.hpp \
-    game.hpp
+    game.hpp \
+    dna.h \
+    neuralnetwork.hpp

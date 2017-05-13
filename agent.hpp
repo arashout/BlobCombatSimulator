@@ -25,28 +25,23 @@ public:
             );
     void executeInput(std::unordered_map<std::string, Bullet>& bulletMap);
 private:
-    // For IDs
-    static long count;
-    // Limiters on ship movement
+    static long idCount;
     const float terminalSpeed = 150;
-    // Speed decay per update
     const float velocityDecay = .5;
-    // Additional force on keypress
+
     const float thrustPower = 250;
     const float rotatePower = 250;
-    // Statistics
+
     bool isDead;
     float timeAlive;
     unsigned kills;
     float score;
 
-    // Shooting status
     const float shotChargeTime = .1; // Time [s] to pass before next shot
     float shotTimer;
     bool canShoot;
     bool intendToShoot;
 
-    // Eye aesthetics
     sf::CircleShape eye;
     const float eyeRadius = 3;
 
@@ -55,11 +50,9 @@ private:
     void thrust(const float dt, const float direction);
     void rotate(const float dt, const float direction);
 
-    // Helper methods
     bool nearbyBullets(std::unordered_map<std::string, Bullet> &bulletMap);
     bool nearbyAgents(const std::unordered_map<std::string, Agent> &agentMap);
 
-    // Field of vision
     class FieldOfVision : public sf::Drawable{
     public:
         FieldOfVision(Agent &parentAgent);
