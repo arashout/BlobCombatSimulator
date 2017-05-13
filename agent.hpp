@@ -14,8 +14,12 @@ class Agent : public Entity
 {
 public:
     Agent(const float agentRadius, const sf::Vector2f position);
-    void update(const float dt,const sf::RenderWindow &window);
-    void shoot(std::unordered_map<std::string, Bullet>& bulletMap);
+    void update(const float dt, const sf::RenderWindow &window);
+    void execute(
+            const float dt,
+            std::unordered_map<std::string, Bullet>& bulletMap
+            );
+    void shoot(std::unordered_map<std::string, Bullet>& bulletMap, const bool wantsToShoot);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     bool hasAgentInSights(const Agent &thatAgent) const;
     bool canSeeEntity(const Entity &thatEntity) const;
@@ -26,7 +30,6 @@ public:
             std::unordered_map<std::string, Bullet> &bulletMap,
             const sf::RenderWindow &window
         );
-    void executeInput(std::unordered_map<std::string, Bullet>& bulletMap);
 private:
     static long idCount;
     const float terminalSpeed = 150;
@@ -40,16 +43,15 @@ private:
     unsigned kills;
     float score;
 
-    const float shotChargeTime = .1; // Time [s] to pass before next shot
+    const float shotChargeTime = .5; // Time [s] to pass before next shot
     float shotTimer;
     bool canShoot;
-    bool intendToShoot;
 
     sf::CircleShape eye;
     const float eyeRadius = 3;
 
-    void applyInputs(const float dt);
-    void express(const float dt);
+    void applyInputs(const float dt, std::unordered_map<std::string, Bullet>& bulletMap);
+    void express(const float dt, std::unordered_map<std::string, Bullet> &bulletMap);
     void kinematics(const float dt);
     void thrust(const float dt, const float direction);
     void rotate(const float dt, const float direction);

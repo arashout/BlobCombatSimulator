@@ -15,7 +15,6 @@ fov(*this), inputVector(NUM_INPUTS)
     idCount++;
     // Defaults
     canShoot = true;
-    intendToShoot = false;
     isDead = false;
     timeAlive = 0.0;
     kills = 0;
@@ -47,20 +46,26 @@ void Agent::draw(sf::RenderTarget& target, sf::RenderStates states) const{
 }
 
 void Agent::update(const float dt, const sf::RenderWindow &window){
-    if(id == "Player") applyInputs(dt);
-    else express(dt);
-
     kinematics(dt);
     fov.update(shape.getRotation(), eye.getPosition());
     // Mirror edges - Like in PACMAN
     resetPosition(outOfBounds(window, shape.getRadius()), window, shape.getRadius());
     // Recharge shot
-    if(shotTimer >= shotChargeTime) canShoot = true;
+    if(shotTimer >= shotChargeTime) {
+        canShoot = true;
+        shotTimer = 0;
+    }
     else if(shotTimer < shotChargeTime){
         shotTimer += dt;
+        canShoot = false;
     }
 
     timeAlive += dt;
+}
+
+void Agent::execute(const float dt, std::unordered_map<std::__cxx11::string, Bullet> &bulletMap){
+    if(id=="Player") applyInputs(dt, bulletMap);
+    else express(dt, bulletMap);
 }
 
 void Agent::kinematics(const float dt){
@@ -71,23 +76,21 @@ void Agent::kinematics(const float dt){
     eye.setPosition(shape.getPosition() + heading*shape.getRadius());
 }
 
-void Agent::applyInputs(const float dt){
+void Agent::applyInputs(const float dt, std::unordered_map<std::string, Bullet>& bulletMap){
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) thrust(dt, 1);
     else velocity -= velocity*velocityDecay*dt;
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) rotate(dt, 1);
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) rotate(dt, -1);
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && canShoot){
-        intendToShoot = true;
-        shotTimer = 0;
-        canShoot = false;
-    }
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) shoot(bulletMap, true);
 }
 
-void Agent::express(const float dt){
-     Eigen::VectorXf outputVector = dna.brain.feedforward(inputVector);
-     thrust(dt, inputVector(nnParam::thrustIndex) );
+void Agent::express(const float dt, std::unordered_map<std::string, Bullet>& bulletMap){
+    dna.brain.feedforward(inputVector);
+    Eigen::VectorXf outputVector = dna.brain.computePrediction();
+    shoot(bulletMap, outputVector(nnParam::shootIndex));
+    thrust(dt, outputVector(nnParam::thrustIndex) );
 }
 
 void Agent::thrust(const float dt, const float direction){
@@ -103,12 +106,10 @@ void Agent::rotate(const float dt, const float direction){
     shape.rotate(dt*direction*rotatePower);
 }
 
-void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletMap){
-    Agent &thisAgent = *this;
-    if(intendToShoot == true){
-        Bullet b(eye.getPosition() ,velocity, shape.getRotation(), thisAgent);
+void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletMap,const bool wantsToShoot){
+    if(wantsToShoot && canShoot){
+        Bullet b(eye.getPosition() ,velocity, shape.getRotation(), *this);
         bulletMap.insert(std::make_pair(b.getId(), b));
-        intendToShoot = false;
     }
 }
 

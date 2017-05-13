@@ -45,9 +45,8 @@ void Game::updatePhase(const float elapsedTime){
         Agent &thisAgent = kv.second;
         if(!thisAgent.hasDied()){
             thisAgent.fillInputVector(activeAgentMap, bulletMap, mWindow);
+            thisAgent.execute(elapsedTime, bulletMap);
             thisAgent.update(elapsedTime, mWindow);
-            thisAgent.shoot(bulletMap);
-
         }
         else deadAgentIds.insert(thisAgent.getId());
     }

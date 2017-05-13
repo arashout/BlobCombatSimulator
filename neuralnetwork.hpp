@@ -7,9 +7,11 @@ class NeuralNetwork
 {
 public:
     NeuralNetwork(const std::vector<unsigned> &topology);
-    Eigen::VectorXf feedforward(const Eigen::VectorXf &inputs);
+    void feedforward(const Eigen::VectorXf &inputs);
+    Eigen::VectorXf computePrediction(void) const;
+
     void setWeights(const unsigned matrixIndex, const Eigen::MatrixXf &newWeights);
-    Eigen::MatrixXf getWeights(const unsigned matrixIndex);
+    Eigen::MatrixXf getWeights(const unsigned matrixIndex) const;
     void displayWeights(void) const;
     void displayLayers(void) const;
 private:

@@ -11,6 +11,11 @@ float activationDerivative(const float x){
     return (1 - std::tanh(x)*std::tanh(x))/2;
 }
 
+float predictionFunction(const float x){
+    if(x > .5) return 1;
+    else return 0;
+}
+
 NeuralNetwork::NeuralNetwork(const std::vector<unsigned> &topology)
 {
     numLayers = topology.size();
@@ -36,7 +41,7 @@ NeuralNetwork::NeuralNetwork(const std::vector<unsigned> &topology)
     }
 }
 
-Eigen::VectorXf NeuralNetwork::feedforward(const Eigen::VectorXf &inputs){
+void NeuralNetwork::feedforward(const Eigen::VectorXf &inputs){
     // Set input layer to have given input values
     layers[0] = inputs;
     // Implement feed forward
@@ -52,7 +57,11 @@ Eigen::VectorXf NeuralNetwork::feedforward(const Eigen::VectorXf &inputs){
         // Activation function
         nextLayer = nextLayer.unaryExpr(std::ptr_fun(activationFunction));
     }
-    return layers.back();
+}
+
+Eigen::VectorXf NeuralNetwork::computePrediction(void) const{
+    const Eigen::VectorXf &lastLayer = layers.back();
+    return lastLayer.unaryExpr(std::ptr_fun(predictionFunction));
 }
 
 void NeuralNetwork::displayLayers(void) const{
@@ -71,6 +80,6 @@ void NeuralNetwork::setWeights(const unsigned matrixIndex, const Eigen::MatrixXf
     weightsMatrices[matrixIndex] = newWeights;
 }
 
-Eigen::MatrixXf NeuralNetwork::getWeights(const unsigned matrixIndex){
+Eigen::MatrixXf NeuralNetwork::getWeights(const unsigned matrixIndex) const{
     return weightsMatrices[matrixIndex];
 }
