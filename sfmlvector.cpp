@@ -1,5 +1,5 @@
 #include "sfmlvector.hpp"
-
+#include <assert.h>
 /**
  * @brief Convert float direction to normalized vector
  * in the same direction
@@ -31,10 +31,6 @@ bool SFMLVector::circToCircCollision(const sf::CircleShape circ1,
     float sumRadii = circ1.getRadius() + circ2.getRadius();
     if(difMag < sumRadii) return true;
     else return false;
-}
-
-bool SFMLVector::lineCircleCollision(const sf::Vertex line[], const sf::CircleShape circ){
-
 }
 
 sf::Vector2f SFMLVector::getRandVector(const float vMin, const float vMax){
@@ -78,3 +74,24 @@ sf::Vector2f SFMLVector::getRandPosition(const EDGE edge,
 
     return p;
 }
+
+bool SFMLVector::lineCircleCollision(const sf::Vector2f line[], const sf::CircleShape circ){
+    const sf::Vector2f &a = line[0]; // Line Start
+    const sf::Vector2f &b = line[1]; // Line End
+    const sf::Vector2f &c = circ.getPosition(); // Circle Center
+    float r = circ.getRadius();
+
+    sf::Vector2f ab = b-a;
+    sf::Vector2f ac = c-a;
+    // If vectors facing wrong direction
+    if(dot(ab, ac) < 0) return false;
+
+    sf::Vector2f ad = dot(ab, ac)/dot(ab, ab) * ab;
+    sf::Vector2f d = ad + a;
+
+    float lineCircleDistance = magnitude(d - c);
+
+    if(lineCircleDistance <= r) return true;
+    return false;
+}
+

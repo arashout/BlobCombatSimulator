@@ -65,7 +65,7 @@ void Agent::update(const float dt, const sf::RenderWindow &window){
 
 void Agent::execute(const float dt, std::unordered_map<std::__cxx11::string, Bullet> &bulletMap){
     if(id=="Player") applyInputs(dt, bulletMap);
-    else express(dt, bulletMap);
+    //else express(dt, bulletMap);
 }
 
 void Agent::kinematics(const float dt){
@@ -173,10 +173,11 @@ void Agent::checkAgents(const std::unordered_map<std::string, Agent> &agentMap){
 
     for(auto &kv2 : agentMap){
         const Agent &thatAgent = kv2.second;
+        if(thatAgent.getId() != id){
+            if(hasAgentInSights(thatAgent)) inputVector(nnParam::seeAgentIndex) = nnParam::floatTrue;
 
-        if(hasAgentInSights(thatAgent)) inputVector(nnParam::seeAgentIndex) = nnParam::floatTrue;
-
-        if(canSeeEntity(thatAgent)) inputVector(nnParam::seeAgentIndex) = nnParam::floatTrue;
+            if(canSeeEntity(thatAgent)) inputVector(nnParam::seeAgentIndex) = nnParam::floatTrue;
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 #include "agent.hpp"
 #include "sfmlvector.hpp"
 #include <math.h>
+#include <iostream>
 
 Agent::FieldOfVision::FieldOfVision(Agent &parentAgent) :
 thisAgent(parentAgent)
@@ -38,20 +39,12 @@ bool Agent::FieldOfVision::canSeeEntity(const Agent &thisAgent, const Entity &th
     else return false;
 }
 bool Agent::FieldOfVision::hasAgentInSights(const Agent &thisAgent, const Agent &thatAgent) const{
-    // Check that agent is within viewing distance
-    sf::Vector2f agentToAgent = thatAgent.getPosition() - thisAgent.getPosition();
-    if(SFMLVector::magnitude(agentToAgent) > viewingDistance) return false;
-
-    // Normalize
-    sf::Vector2f agentToAgentNorm = SFMLVector::normalize(agentToAgent);
-    float dotProduct = SFMLVector::dot(curHeadingVector,agentToAgentNorm);
-    // TODO: This intersection code doesn't work!
-    // Look at the way wolfram does it
-    if(dotProduct == 1.0f) {
+    sf::Vector2f lineSight[2] =  {raySights[0].position, raySights[1].position};
+    if(SFMLVector::lineCircleCollision(lineSight, thatAgent.getShape())){
         std::cout << "Agent in sights ";
         return true;
     }
-    else return false;
+    return false;
 }
 void Agent::FieldOfVision::updateRays(const float heading, const sf::Vector2f &position){
     // TODO: Pre-compute sin(rayAngle) and cos(rayAngle)!

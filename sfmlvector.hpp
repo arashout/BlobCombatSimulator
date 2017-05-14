@@ -27,6 +27,10 @@ public:
         return v.x*u.x + v.y*u.y;
     }
 
+    inline static sf::Vector2f projection(const sf::Vector2f &a, const sf::Vector2f &b){
+        return dot(a,b)/dot(a,b)*a;
+    }
+
     static sf::Vector2f vectorHeading(float direction);
     static sf::Vector2f limit(const sf::Vector2f &v,
                               const float limitMagnitude);
@@ -34,7 +38,7 @@ public:
     static bool circToCircCollision(const sf::CircleShape circ1,
                                     const sf::CircleShape circ2);
 
-    static bool lineCircleCollision(const sf::Vertex line[],
+    static bool lineCircleCollision(const sf::Vector2f line[],
                                     const sf::CircleShape circ);
 
     static bool circToTriCollision(const sf::CircleShape circle,
