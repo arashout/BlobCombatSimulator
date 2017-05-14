@@ -9,15 +9,34 @@
 class SFMLVector
 {
 public:
-    static sf::Vector2f normalize(const sf::Vector2f &v);
-    static float magnitude(const sf::Vector2f &v);
-    static float heading(const sf::Vector2f &v);
-    static float dot(const sf::Vector2f &v, const sf::Vector2f &u);
+    inline static sf::Vector2f normalize(const sf::Vector2f &v){
+        float vSqrt = std::sqrt(v.x*v.x + v.y*v.y);
+        return sf::Vector2f(v/vSqrt);
+    }
+
+    inline static float magnitude(const sf::Vector2f &v){
+        return std::sqrt(v.x*v.x + v.y*v.y);
+    }
+
+    inline static float heading(const sf::Vector2f &v){
+        // Shifted 90 degrees since SFML 0 degree == UP
+        return std::atan(v.y/v.x) * DEG2RAD - 90;
+    }
+
+    inline static float dot(const sf::Vector2f &v, const sf::Vector2f &u){
+        return v.x*u.x + v.y*u.y;
+    }
+
     static sf::Vector2f vectorHeading(float direction);
     static sf::Vector2f limit(const sf::Vector2f &v,
                               const float limitMagnitude);
+
     static bool circToCircCollision(const sf::CircleShape circ1,
                                     const sf::CircleShape circ2);
+
+    static bool lineCircleCollision(const sf::Vertex line[],
+                                    const sf::CircleShape circ);
+
     static bool circToTriCollision(const sf::CircleShape circle,
                                    const sf::CircleShape triangle);
     static sf::Vector2f getRandVector(const float min, const float max);

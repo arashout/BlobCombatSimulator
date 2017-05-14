@@ -1,21 +1,5 @@
 #include "sfmlvector.hpp"
 
-
-sf::Vector2f SFMLVector::normalize(const sf::Vector2f &v){
-    float vSqrt = std::sqrt(v.x*v.x + v.y*v.y);
-    return sf::Vector2f(v/vSqrt);
-}
-float SFMLVector::magnitude(const sf::Vector2f &v){
-    return std::sqrt(v.x*v.x + v.y*v.y);
-}
-float SFMLVector::heading(const sf::Vector2f &v){
-    // Shifted 90 degrees since SFML 0 degree == UP
-    return std::atan(v.y/v.x) * DEG2RAD - 90;
-}
-float SFMLVector::dot(const sf::Vector2f &v, const sf::Vector2f &u){
-    return v.x*u.x + v.y*u.y;
-}
-
 /**
  * @brief Convert float direction to normalized vector
  * in the same direction
@@ -48,6 +32,11 @@ bool SFMLVector::circToCircCollision(const sf::CircleShape circ1,
     if(difMag < sumRadii) return true;
     else return false;
 }
+
+bool SFMLVector::lineCircleCollision(const sf::Vertex line[], const sf::CircleShape circ){
+
+}
+
 sf::Vector2f SFMLVector::getRandVector(const float vMin, const float vMax){
     float x = vMin + static_cast <float> (rand())/
             ( static_cast <float> (RAND_MAX/(vMax-vMin)));
