@@ -24,7 +24,7 @@ namespace nnParam {
     const unsigned short rotateRightIndex = 3;
 
 
-    const std::vector<unsigned> topology {NUM_INPUTS, 15, NUM_OUTPUTS};
+    const std::vector<unsigned> topology {NUM_INPUTS, 8, 8, NUM_OUTPUTS};
 
 
 

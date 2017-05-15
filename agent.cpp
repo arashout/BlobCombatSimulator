@@ -8,8 +8,7 @@
 // This is used for unique id creation
 long Agent::idCount = 0;
 
-Agent::Agent(const float agentRadius,const sf::Vector2f position) :
-fov(*this), inputVector(NUM_INPUTS)
+Agent::Agent(const sf::Vector2f position) : fov(*this), inputVector(NUM_INPUTS)
 {
     id = "A" + std::to_string(idCount);
     idCount++;
@@ -18,7 +17,7 @@ fov(*this), inputVector(NUM_INPUTS)
     isDead = false;
     timeAlive = 0.0;
     kills = 0;
-    score = 0;
+    fitness = 0;
     shotTimer = shotChargeTime;
 
     // Ship shape and colour adjusted here
@@ -91,9 +90,12 @@ void Agent::express(const float dt, std::unordered_map<std::string, Bullet>& bul
     Eigen::VectorXf outputVector = dna.brain.computePrediction();
     shoot(bulletMap, outputVector(nnParam::shootIndex));
     thrust(dt, outputVector(nnParam::thrustIndex) );
-    // TODO: Should test rotations with debugger
-    if(outputVector(nnParam::rotateRightIndex) == 1.0f) rotate(dt, 1);
-    else if(outputVector(nnParam::rotateLeftIndex == 1.0f)) rotate(dt, -1);
+
+    bool rotateRight = outputVector(nnParam::rotateRightIndex) == 1.0f;
+    bool rotateLeft = outputVector(nnParam::rotateLeftIndex == 1.0f);
+    if(rotateRight && rotateLeft){} // Attempt to remove bias of turning a certain direction
+    else if(rotateRight) rotate(dt, 1);
+    else if(rotateLeft) rotate(dt, -1);
 }
 
 void Agent::thrust(const float dt, const float direction){
@@ -125,7 +127,7 @@ bool Agent::canSeeEntity(const Entity &thatEntity) const{
 }
 
 bool Agent::hasAgentInSights(const Agent &thatAgent) const{
-    return fov.hasAgentInSights(*this, thatAgent);
+    return fov.hasAgentInSights(thatAgent);
 }
 
 void Agent::fillInputVector(
@@ -133,8 +135,10 @@ void Agent::fillInputVector(
         std::unordered_map<std::string, Bullet>& bulletMap,
         const sf::RenderWindow &window){
 
+
     checkAgents(agentMap);
     checkBullets(bulletMap);
+
     inputVector(nnParam::shotTimerIndex) = computeNormalizedShotTimer();
     sf::Vector2f normalizedPosition = computeNormalizedPosition(
                 shape.getPosition(),

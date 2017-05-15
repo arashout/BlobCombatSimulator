@@ -10,7 +10,8 @@ SOURCES += main.cpp \
     game.cpp \
     fieldofvision.cpp \
     dna.cpp \
-    neuralnetwork.cpp
+    neuralnetwork.cpp \
+    simulation.cpp
 
 LIBS += -L"/home/arash/SFML/lib"
 
@@ -32,4 +33,5 @@ HEADERS += \
     game.hpp \
     dna.h \
     neuralnetwork.hpp \
-    nnparameters.hpp
+    nnparameters.hpp \
+    simulation.hpp

@@ -38,16 +38,14 @@ bool Agent::FieldOfVision::canSeeEntity(const Agent &thisAgent, const Entity &th
     if(angle < viewingAngle) return true;
     else return false;
 }
-bool Agent::FieldOfVision::hasAgentInSights(const Agent &thisAgent, const Agent &thatAgent) const{
+bool Agent::FieldOfVision::hasAgentInSights(const Agent &thatAgent) const{
     sf::Vector2f lineSight[2] =  {raySights[0].position, raySights[1].position};
     if(SFMLVector::lineCircleCollision(lineSight, thatAgent.getShape())){
-        std::cout << "Agent in sights ";
         return true;
     }
-    return false;
+    else return false;
 }
 void Agent::FieldOfVision::updateRays(const float heading, const sf::Vector2f &position){
-    // TODO: Pre-compute sin(rayAngle) and cos(rayAngle)!
     // Update ray 1 position
     ray1[0].position = position;
     float rayAngle = (heading - viewingAngle)*DEG2RAD;

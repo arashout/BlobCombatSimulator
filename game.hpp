@@ -27,6 +27,9 @@ private:
 
     void reset();
     void pause();
+
+    const size_t numAgents = 4;
+    sf::CircleShape spawnCircle;
 };
 
 #endif // GAME_HPP

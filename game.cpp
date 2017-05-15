@@ -1,15 +1,25 @@
 #include "game.hpp"
 #include "sfmlvector.hpp"
 
-Game::Game(sf::RenderWindow &window) :
-    mWindow(window)
-{
-    Agent a1(15, static_cast<sf::Vector2f> (mWindow.getSize()) / 2.0f);
-    a1.setId("Player");
-    Agent a2(15, static_cast<sf::Vector2f> (mWindow.getSize()) / 3.0f);
-    activeAgentMap.insert(std::make_pair(a1.getId(), a1));
-    activeAgentMap.insert(std::make_pair(a2.getId(), a2));
+Game::Game(sf::RenderWindow &window) : mWindow(window){
+    float xSize = mWindow.getSize().x;
+    float ySize = mWindow.getSize().y;
+    sf::Vector2f screenMidpoint(xSize/2, ySize/2);
+    float r = xSize/2 - xSize/10;
 
+    // Circle used for spawning agents
+    spawnCircle.setRadius(r);
+    spawnCircle.setPointCount(numAgents);
+    spawnCircle.setOrigin(r,r);
+    spawnCircle.setPosition(screenMidpoint);
+
+    for(size_t i = 0; i < numAgents; i++){
+        sf::Vector2f globalPointPosition = spawnCircle.getTransform().
+                transformPoint(spawnCircle.getPoint(i));
+
+        Agent a(globalPointPosition);
+        activeAgentMap.insert(std::make_pair(a.getId(), a));
+    }
 }
 void Game::run(void){
 
@@ -30,7 +40,9 @@ void Game::run(void){
 
         updatePhase(elapsedTime);
         deletionPhase();
+        mWindow.draw(spawnCircle);
         drawPhase();
+
 
         // end the current frame
         mWindow.display();

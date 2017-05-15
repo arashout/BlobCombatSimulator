@@ -13,7 +13,7 @@
 class Agent : public Entity
 {
 public:
-    Agent(const float agentRadius, const sf::Vector2f position);
+    Agent(const sf::Vector2f position);
     void update(const float dt, const sf::RenderWindow &window);
     void execute(
             const float dt,
@@ -35,13 +35,14 @@ private:
     const float terminalSpeed = 150;
     const float velocityDecay = .5;
 
-    const float thrustPower = 250;
-    const float rotatePower = 250;
+    const float thrustPower = 200;
+    const float rotatePower = 200;
 
+    const float agentRadius = 15;
     bool isDead;
     float timeAlive;
     unsigned kills;
-    float score;
+    float fitness;
 
     const float shotChargeTime = .5; // Time [s] to pass before next shot
     float shotTimer;
@@ -67,7 +68,7 @@ private:
         FieldOfVision(Agent &parentAgent);
         void draw(sf::RenderTarget& target, sf::RenderStates states) const;
         void update(const float heading, const sf::Vector2f &position);
-        bool hasAgentInSights(const Agent &thisAgent, const Agent &thatAgent) const;
+        bool hasAgentInSights(const Agent &thatAgent) const;
         bool canSeeEntity(const Agent &thisAgent,const Entity &thatEntity) const;
     private:
         sf::Vertex ray1[2]; // Heading - viewing angle
@@ -76,6 +77,7 @@ private:
 
         const float viewingAngle = 50;
         const float viewingDistance = 400;
+
         sf::Vector2f curHeadingVector;
 
         void updateRays(const float heading, const sf::Vector2f &position);
