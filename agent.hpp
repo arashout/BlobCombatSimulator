@@ -13,6 +13,7 @@
 class Agent : public Entity
 {
 public:
+    Agent();
     Agent(unsigned genNum);
     void update(const float dt, const sf::RenderWindow &window);
     void execute(
@@ -29,7 +30,7 @@ public:
     static void resetIdCount(void);
     bool hasDied(void) const;
     void incrementKillCount(void);
-    float computeFitness(void);
+    float computeFitness(void) const;
     void fillInputVector(
             const std::unordered_map<std::string, Agent> &agentMap,
             std::unordered_map<std::string, Bullet> &bulletMap,
@@ -37,24 +38,14 @@ public:
         );
 private:
     static long idCount;
-    const float terminalSpeed = 150;
-    const float velocityDecay = .5;
-
-    const float thrustPower = 200;
-    const float rotatePower = 200;
-
-    const float agentRadius = 15;
     bool isDead;
     float timeAlive;
     unsigned kills;
-    float fitness;
 
-    const float shotChargeTime = .5; // Time [s] to pass before next shot
     float shotTimer;
     bool canShoot;
 
     sf::CircleShape eye;
-    const float eyeRadius = 3;
 
     void applyInputs(const float dt, std::unordered_map<std::string, Bullet>& bulletMap);
     void express(const float dt, std::unordered_map<std::string, Bullet> &bulletMap);
@@ -79,9 +70,6 @@ private:
         sf::Vertex ray1[2]; // Heading - viewing angle
         sf::Vertex ray2[2]; // Heading + viewing angle
         sf::Vertex raySights[2]; // Sight representing bullet trajectory
-
-        const float viewingAngle = 50;
-        const float viewingDistance = 200;
 
         sf::Vector2f curHeadingVector;
 

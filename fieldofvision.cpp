@@ -2,6 +2,9 @@
 #include "sfmlvector.hpp"
 #include <math.h>
 #include <iostream>
+#include "fovparameters.hpp"
+
+class Agent;
 
 Agent::FieldOfVision::FieldOfVision(Agent &parentAgent) :
 thisAgent(parentAgent)
@@ -30,12 +33,12 @@ void Agent::FieldOfVision::update(const float heading, const sf::Vector2f &posit
 bool Agent::FieldOfVision::canSeeEntity(const Agent &thisAgent, const Entity &thatEntity) const{
     // Check that agent is within viewing distance
     sf::Vector2f agentToEntity = thatEntity.getPosition() - thisAgent.getPosition();
-    if(SFMLVector::magnitude(agentToEntity) > viewingDistance) return false;
+    if(SFMLVector::magnitude(agentToEntity) > fovParams::viewingDistance) return false;
     // TODO - Factor in radius into this calculation
     // Within viewing angle
     sf::Vector2f agentToEntityNorm = SFMLVector::normalize(agentToEntity);
     float angle = acos(SFMLVector::dot(curHeadingVector,agentToEntityNorm))*RAD2DEG;
-    if(angle < viewingAngle) return true;
+    if(angle < fovParams::viewingAngle) return true;
     else return false;
 }
 bool Agent::FieldOfVision::hasAgentInSights(const Agent &thatAgent) const{

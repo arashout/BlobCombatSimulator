@@ -2,6 +2,11 @@
 #include "game.hpp"
 #include "simulationparameters.hpp"
 #include <iostream>
+#include <algorithm>
+
+bool agentCmp(const Agent &a1,const Agent &a2){
+   return a1.getId() < a2.getId();
+}
 
 Simulation::Simulation() {
     sf::RenderWindow mainWindow(sf::VideoMode(600, 600), "Blob Combat Simulator!");
@@ -45,7 +50,7 @@ void Simulation::singleGame(std::unordered_map<std::string, Agent> &batchAgents,
 }
 
 void Simulation::scoreAgents(std::vector<Agent> &agents){
-
+    std::sort(agents.begin(), agents.end());
     for(Agent &a : agents){
         std::cout << a.getId() << " : " << std::to_string(a.computeFitness()) << std::endl;
     }

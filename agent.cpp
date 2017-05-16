@@ -4,6 +4,7 @@
 #include <math.h>
 #include <iostream>
 #include "nnparameters.hpp"
+#include "agentparameters.hpp"
 
 // This is used for unique id creation
 long Agent::idCount = 0;
@@ -17,19 +18,19 @@ Agent::Agent(unsigned genNum) : fov(*this), inputVector(NUM_INPUTS)
     isDead = false;
     timeAlive = 0.0;
     kills = 0;
-    fitness = 0.0;
-    shotTimer = shotChargeTime;
+    shotTimer = agentParams::shotChargeTime;
 
     // Ship shape and colour adjusted here
-    shape = sf::CircleShape(agentRadius);
+    const float &r = agentParams::agentRadius;
+    shape = sf::CircleShape(r);
     shape.setFillColor(sf::Color::White);
 
-    eye = sf::CircleShape(eyeRadius);
+    eye = sf::CircleShape(agentParams::eyeRadius);
     eye.setFillColor(sf::Color::Red);
 
     // Convenienve
-    shape.setOrigin(agentRadius, agentRadius);
-    eye.setOrigin(eyeRadius, eyeRadius);
+    shape.setOrigin(r, r);
+    eye.setOrigin(agentParams::eyeRadius, agentParams::eyeRadius);
 
     velocity = sf::Vector2f(0,0);
 
@@ -49,11 +50,11 @@ void Agent::update(const float dt, const sf::RenderWindow &window){
     // Mirror edges - Like in PACMAN
     resetPosition(outOfBounds(window, shape.getRadius()), window, shape.getRadius());
     // Recharge shot
-    if(shotTimer >= shotChargeTime) {
+    if(shotTimer >= agentParams::shotChargeTime) {
         canShoot = true;
         shotTimer = 0;
     }
-    else if(shotTimer < shotChargeTime){
+    else if(shotTimer < agentParams::shotChargeTime){
         shotTimer += dt;
         canShoot = false;
     }
@@ -76,7 +77,7 @@ void Agent::kinematics(const float dt){
 
 void Agent::applyInputs(const float dt, std::unordered_map<std::string, Bullet>& bulletMap){
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) thrust(dt, 1);
-    else velocity -= velocity*velocityDecay*dt;
+    else velocity -= velocity*agentParams::velocityDecay*dt;
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) rotate(dt, 1);
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) rotate(dt, -1);
@@ -99,15 +100,15 @@ void Agent::express(const float dt, std::unordered_map<std::string, Bullet>& bul
 
 void Agent::thrust(const float dt, const float direction){
     sf::Vector2f thrustVector = SFMLVector::vectorHeading(shape.getRotation());
-    velocity += thrustVector * thrustPower * dt * direction;
+    velocity += thrustVector * agentParams::thrustPower * dt * direction;
     // Limit velocity
-    if(SFMLVector::magnitude(velocity) > terminalSpeed){
-        velocity = SFMLVector::limit(velocity, terminalSpeed);
+    if(SFMLVector::magnitude(velocity) > agentParams::terminalSpeed){
+        velocity = SFMLVector::limit(velocity, agentParams::terminalSpeed);
     }
 }
 
 void Agent::rotate(const float dt, const float direction){
-    shape.rotate(dt*direction*rotatePower);
+    shape.rotate(dt*direction*agentParams::rotatePower);
 }
 
 void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletMap,const bool wantsToShoot){
@@ -186,7 +187,7 @@ void Agent::checkAgents(const std::unordered_map<std::string, Agent> &agentMap){
 }
 
 float Agent::computeNormalizedShotTimer(void) const{
-    return shotTimer/shotChargeTime;
+    return shotTimer/agentParams::shotChargeTime;
 }
 
 sf::Vector2f Agent::computeNormalizedPosition(const sf::Vector2f &pos, const float xMax, const float yMax) const{
@@ -211,8 +212,8 @@ void Agent::incrementKillCount(void){
     kills++;
 }
 
-float Agent::computeFitness(void){
-    if(fitness != 0.0) return fitness; // Cached
+float Agent::computeFitness(void) const{
+    float fitness;
 
     if(isDead) fitness = kills*10 + timeAlive*3;
     else fitness = kills*10 + (1/timeAlive)*10 + 20;

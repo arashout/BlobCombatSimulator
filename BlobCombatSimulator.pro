@@ -35,4 +35,6 @@ HEADERS += \
     neuralnetwork.hpp \
     nnparameters.hpp \
     simulation.hpp \
-    simulationparameters.hpp
+    simulationparameters.hpp \
+    agentparameters.hpp \
+    fovparameters.hpp
