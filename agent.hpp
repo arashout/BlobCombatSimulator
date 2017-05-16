@@ -13,7 +13,7 @@
 class Agent : public Entity
 {
 public:
-    Agent();
+    Agent(unsigned genNum);
     void update(const float dt, const sf::RenderWindow &window);
     void execute(
             const float dt,
@@ -26,6 +26,7 @@ public:
     void setId(const std::string newId);
     void setPosition(const sf::Vector2f p);
     void setRotation(const float heading);
+    static void resetIdCount(void);
     bool hasDied(void);
     void fillInputVector(
             const std::unordered_map<std::string, Agent> &agentMap,

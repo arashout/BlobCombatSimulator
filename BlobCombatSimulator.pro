@@ -34,4 +34,5 @@ HEADERS += \
     dna.h \
     neuralnetwork.hpp \
     nnparameters.hpp \
-    simulation.hpp
+    simulation.hpp \
+    simulationparameters.hpp

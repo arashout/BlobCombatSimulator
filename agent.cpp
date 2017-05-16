@@ -8,9 +8,9 @@
 // This is used for unique id creation
 long Agent::idCount = 0;
 
-Agent::Agent() : fov(*this), inputVector(NUM_INPUTS)
+Agent::Agent(unsigned genNum) : fov(*this), inputVector(NUM_INPUTS)
 {
-    id = "A" + std::to_string(idCount);
+    id = "G" + std::to_string(genNum) + "A" + std::to_string(idCount);
     idCount++;
     // Defaults
     canShoot = true;
@@ -63,7 +63,7 @@ void Agent::update(const float dt, const sf::RenderWindow &window){
 
 void Agent::execute(const float dt, std::unordered_map<std::__cxx11::string, Bullet> &bulletMap){
     if(id=="Player") applyInputs(dt, bulletMap);
-    //else express(dt, bulletMap);
+    else express(dt, bulletMap);
 }
 
 void Agent::kinematics(const float dt){
@@ -193,6 +193,7 @@ sf::Vector2f Agent::computeNormalizedPosition(const sf::Vector2f &pos, const flo
     float normY = pos.y/yMax;
     return sf::Vector2f(normX, normY);
 }
+
 bool Agent::hasDied(void){
     return isDead;
 }
@@ -203,4 +204,8 @@ void Agent::setPosition(const sf::Vector2f p){
 
 void Agent::setRotation(const float heading){
     shape.setRotation(heading);
+}
+
+static void Agent::resetIdCount(void){
+    idCount = 0;
 }
