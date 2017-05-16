@@ -13,7 +13,7 @@
 class Agent : public Entity
 {
 public:
-    Agent(const sf::Vector2f position);
+    Agent();
     void update(const float dt, const sf::RenderWindow &window);
     void execute(
             const float dt,
@@ -24,6 +24,8 @@ public:
     bool hasAgentInSights(const Agent &thatAgent) const;
     bool canSeeEntity(const Entity &thatEntity) const;
     void setId(const std::string newId);
+    void setPosition(const sf::Vector2f p);
+    void setRotation(const float heading);
     bool hasDied(void);
     void fillInputVector(
             const std::unordered_map<std::string, Agent> &agentMap,

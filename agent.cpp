@@ -8,7 +8,7 @@
 // This is used for unique id creation
 long Agent::idCount = 0;
 
-Agent::Agent(const sf::Vector2f position) : fov(*this), inputVector(NUM_INPUTS)
+Agent::Agent() : fov(*this), inputVector(NUM_INPUTS)
 {
     id = "A" + std::to_string(idCount);
     idCount++;
@@ -31,7 +31,6 @@ Agent::Agent(const sf::Vector2f position) : fov(*this), inputVector(NUM_INPUTS)
     shape.setOrigin(agentRadius, agentRadius);
     eye.setOrigin(eyeRadius, eyeRadius);
 
-    shape.setPosition(position);
     velocity = sf::Vector2f(0,0);
 
 }
@@ -196,4 +195,12 @@ sf::Vector2f Agent::computeNormalizedPosition(const sf::Vector2f &pos, const flo
 }
 bool Agent::hasDied(void){
     return isDead;
+}
+
+void Agent::setPosition(const sf::Vector2f p){
+    shape.setPosition(p);
+}
+
+void Agent::setRotation(const float heading){
+    shape.setRotation(heading);
 }

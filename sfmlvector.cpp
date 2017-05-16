@@ -1,5 +1,4 @@
 #include "sfmlvector.hpp"
-#include <assert.h>
 /**
  * @brief Convert float direction to normalized vector
  * in the same direction

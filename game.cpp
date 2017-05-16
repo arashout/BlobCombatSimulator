@@ -17,7 +17,11 @@ Game::Game(sf::RenderWindow &window) : mWindow(window){
         sf::Vector2f globalPointPosition = spawnCircle.getTransform().
                 transformPoint(spawnCircle.getPoint(i));
 
-        Agent a(globalPointPosition);
+        Agent a;
+        a.setPosition(globalPointPosition);
+        sf::Vector2f headingVector = screenMidpoint - globalPointPosition;
+        float faceCenterHeading = SFMLVector::heading(headingVector);
+        a.setRotation(faceCenterHeading);
         activeAgentMap.insert(std::make_pair(a.getId(), a));
     }
 }
@@ -40,7 +44,6 @@ void Game::run(void){
 
         updatePhase(elapsedTime);
         deletionPhase();
-        mWindow.draw(spawnCircle);
         drawPhase();
 
 
