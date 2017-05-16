@@ -20,7 +20,7 @@ public:
 
     inline static float heading(const sf::Vector2f &v){
         // Shifted 90 degrees since SFML 0 degree == UP
-        float arctanVal = std::atan(v.y/v.x);
+        float arctanVal = std::atan2(v.y,v.x);
         float finalHeading = arctanVal * RAD2DEG;
         finalHeading += 90;
         return finalHeading;
