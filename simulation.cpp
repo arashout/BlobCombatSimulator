@@ -4,30 +4,38 @@
 #include <iostream>
 
 Simulation::Simulation() {
-    // Initialize generation 0 population
-    initializePopulation(0);
-
     sf::RenderWindow mainWindow(sf::VideoMode(600, 600), "Blob Combat Simulator!");
-
-    singleRound(mainWindow);
-    scoreRound();
+    // Initialize generation 0 population
+    std::vector<Agent> startPopulation = initializePopulation(0);
+    std::vector<Agent> testedAgentPopulation = singleRound(mainWindow, startPopulation);
+    scoreAgents(testedAgentPopulation);
 
 }
 
-void Simulation::singleRound(sf::RenderWindow &window){
+std::vector<Agent> Simulation::singleRound(sf::RenderWindow &window, std::vector<Agent> &agentPop){
     std::unordered_map<std::string, Agent> currentBatch;
 
+    std::vector<Agent> testedPopulation;
     unsigned counter = 1;
 
-    for(auto &a : agentPopulation){
+    for(auto &a : agentPop){
+        // TODO - PASS BY REFERENCE SOMEHOW!
+        // Then I won't have to re-create the vector
         currentBatch.insert(std::make_pair(a.getId(), a));
 
         if(counter % simParams::batchSize == 0){
             singleGame(currentBatch, window);
+            // Re-create agent vector
+            for(auto &kv : currentBatch){
+                Agent &agent = kv.second;
+                testedPopulation.push_back(agent);
+            }
+
             currentBatch.clear();
         }
         counter++;
     }
+    return testedPopulation;
 }
 
 void Simulation::singleGame(std::unordered_map<std::string, Agent> &batchAgents,
@@ -36,17 +44,18 @@ void Simulation::singleGame(std::unordered_map<std::string, Agent> &batchAgents,
     game.run();
 }
 
-void Simulation::scoreRound(void){
+void Simulation::scoreAgents(std::vector<Agent> &agents){
 
-    for(Agent &a : agentPopulation){
+    for(Agent &a : agents){
         std::cout << a.getId() << " : " << std::to_string(a.computeFitness()) << std::endl;
     }
 }
 
-void Simulation::initializePopulation(unsigned genNum){
-    agentPopulation.clear();
+std::vector<Agent> Simulation::initializePopulation(unsigned genNum){
+    std::vector<Agent> agents;
     for(size_t i = 0; i < (simParams::numBatches * simParams::batchSize); i++){
         Agent a(genNum);
-        agentPopulation.push_back(a);
+        agents.push_back(a);
     }
+    return agents;
 }
