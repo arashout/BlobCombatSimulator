@@ -51,21 +51,21 @@ bool Agent::FieldOfVision::hasAgentInSights(const Agent &thatAgent) const{
 void Agent::FieldOfVision::updateRays(const float heading, const sf::Vector2f &position){
     // Update ray 1 position
     ray1[0].position = position;
-    float rayAngle = (heading - viewingAngle)*DEG2RAD;
+    float rayAngle = (heading - fovParams::viewingAngle)*DEG2RAD;
     sf::Vector2f endPoint1(
-                position.x + std::sin(rayAngle)*viewingDistance,
-                position.y - std::cos(rayAngle)*viewingDistance
+                position.x + std::sin(rayAngle)*fovParams::viewingDistance,
+                position.y - std::cos(rayAngle)*fovParams::viewingDistance
                 );
     ray1[1].position = endPoint1;
     // Update ray 2 position
     ray2[0].position = position;
-    rayAngle = (heading + viewingAngle)*DEG2RAD;
+    rayAngle = (heading + fovParams::viewingAngle)*DEG2RAD;
     sf::Vector2f endPoint2 = sf::Vector2f(
-                position.x + std::sin(rayAngle)*viewingDistance,
-                position.y - std::cos(rayAngle)*viewingDistance
+                position.x + std::sin(rayAngle)*fovParams::viewingDistance,
+                position.y - std::cos(rayAngle)*fovParams::viewingDistance
                 );
     ray2[1].position = endPoint2;
     // Update sights position
     raySights[0].position = position;
-    raySights[1] = curHeadingVector*viewingDistance + position;
+    raySights[1] = curHeadingVector*fovParams::viewingDistance + position;
 }
