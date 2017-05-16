@@ -206,6 +206,6 @@ void Agent::setRotation(const float heading){
     shape.setRotation(heading);
 }
 
-static void Agent::resetIdCount(void){
+void Agent::resetIdCount(void){
     idCount = 0;
 }

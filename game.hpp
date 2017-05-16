@@ -10,14 +10,13 @@
 class Game
 {
 public:
-    Game(sf::RenderWindow &window);
+    Game(sf::RenderWindow &window,std::unordered_map<std::string, Agent> &agents);
     void run(void);
 private:
     sf::RenderWindow &mWindow;
     std::unordered_map<std::string, Bullet> bulletMap;
     std::unordered_set<std::string> bulletDeletionSet;
-    std::unordered_map<std::string, Agent> activeAgentMap;
-    std::unordered_map<std::string, Agent> deadAgentMap;
+    std::unordered_map<std::string, Agent> &activeAgentMap;
     std::unordered_set<std::string> deadAgentIds;
 
     void handleEvents(void);

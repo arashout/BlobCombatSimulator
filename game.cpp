@@ -1,7 +1,10 @@
 #include "game.hpp"
 #include "sfmlvector.hpp"
+#include "simulationparameters.hpp"
 
-Game::Game(sf::RenderWindow &window) : mWindow(window){
+Game::Game(sf::RenderWindow &window, std::unordered_map<std::__cxx11::string, Agent> &agents) :
+      mWindow(window), activeAgentMap(agents)
+{
     float xSize = mWindow.getSize().x;
     float ySize = mWindow.getSize().y;
     sf::Vector2f screenMidpoint(xSize/2, ySize/2);
@@ -13,28 +16,32 @@ Game::Game(sf::RenderWindow &window) : mWindow(window){
     spawnCircle.setOrigin(r,r);
     spawnCircle.setPosition(screenMidpoint);
 
-    for(size_t i = 0; i < numAgents; i++){
+    // Initialize fair positioning of agents
+    unsigned counter = 0;
+    for(auto &kv : activeAgentMap){
+        Agent &a = kv.second;
         sf::Vector2f globalPointPosition = spawnCircle.getTransform().
-                transformPoint(spawnCircle.getPoint(i));
+                transformPoint(spawnCircle.getPoint(counter));
 
-        Agent a;
         a.setPosition(globalPointPosition);
         sf::Vector2f headingVector = screenMidpoint - globalPointPosition;
         float faceCenterHeading = SFMLVector::heading(headingVector);
         a.setRotation(faceCenterHeading);
-        activeAgentMap.insert(std::make_pair(a.getId(), a));
+        counter++;
     }
 }
 void Game::run(void){
 
     // For handling time
     sf::Clock clock;
-
+    float totalElapsedTime = 0;
 
     // run the program as long as the window is open
     while (mWindow.isOpen())
     {
         float elapsedTime = clock.getElapsedTime().asSeconds();
+        totalElapsedTime+= elapsedTime;
+
         clock.restart();
 
         handleEvents();
@@ -52,6 +59,9 @@ void Game::run(void){
 
         // Last agent remaining marks end of game
         if(activeAgentMap.size() == 1) break;
+        // If time limit reached
+        if(totalElapsedTime > simParams::maxTime) break;
+
     }
 }
 void Game::updatePhase(const float elapsedTime){
@@ -75,13 +85,20 @@ void Game::updatePhase(const float elapsedTime){
     }
 }
 void Game::deletionPhase(void){
+    // Delete bullets of dead agents
+    // Don't reward suicides...
+    for(auto &kv : bulletMap){
+        Bullet &b = kv.second;
+        std::string bId = b.getParentId();
+        if(deadAgentIds.find(bId) != deadAgentIds.end()){
+            bulletDeletionSet.insert(bId);
+        }
+    }
+
     for(auto &agentId : deadAgentIds){
-        // Add dead agent to deadAgent map
-        Agent &agent = activeAgentMap.at(agentId);
-        deadAgentMap.insert(std::make_pair(agent.getId(), agent));
         activeAgentMap.erase(agentId);
     }
-    deadAgentIds.clear();
+
 
     for(auto &bulletId : bulletDeletionSet){
         bulletMap.erase(bulletId);
