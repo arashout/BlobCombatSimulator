@@ -3,7 +3,7 @@
 #include "simulationparameters.hpp"
 
 Game::Game(sf::RenderWindow &window, std::unordered_map<std::__cxx11::string, Agent> &agents) :
-      mWindow(window), activeAgentMap(agents)
+      mWindow(window), allAgents(agents)
 {
     float xSize = mWindow.getSize().x;
     float ySize = mWindow.getSize().y;
@@ -18,7 +18,7 @@ Game::Game(sf::RenderWindow &window, std::unordered_map<std::__cxx11::string, Ag
 
     // Initialize fair positioning of agents
     unsigned counter = 0;
-    for(auto &kv : activeAgentMap){
+    for(auto &kv : allAgents){
         Agent &a = kv.second;
         sf::Vector2f globalPointPosition = spawnCircle.getTransform().
                 transformPoint(spawnCircle.getPoint(counter));
@@ -40,7 +40,7 @@ void Game::run(void){
     while (mWindow.isOpen())
     {
         float elapsedTime = clock.getElapsedTime().asSeconds();
-        totalElapsedTime+= elapsedTime;
+        totalElapsedTime += elapsedTime;
 
         clock.restart();
 
@@ -58,7 +58,7 @@ void Game::run(void){
         mWindow.display();
 
         // Last agent remaining marks end of game
-        if(activeAgentMap.size() == 1) break;
+        if(allAgents.size() == 1) break;
         // If time limit reached
         if(totalElapsedTime > simParams::maxTime) break;
 
@@ -66,14 +66,13 @@ void Game::run(void){
 }
 void Game::updatePhase(const float elapsedTime){
     // Agent Updates
-    for(auto &kv : activeAgentMap){
+    for(auto &kv : allAgents){
         Agent &thisAgent = kv.second;
         if(!thisAgent.hasDied()){
-            thisAgent.fillInputVector(activeAgentMap, bulletMap, mWindow);
+            thisAgent.fillInputVector(allAgents, bulletMap, mWindow);
             thisAgent.execute(elapsedTime, bulletMap);
             thisAgent.update(elapsedTime, mWindow);
         }
-        else deadAgentIds.insert(thisAgent.getId());
     }
 
     // Bullet updates - With range-for loop
@@ -85,21 +84,6 @@ void Game::updatePhase(const float elapsedTime){
     }
 }
 void Game::deletionPhase(void){
-    // Delete bullets of dead agents
-    // Don't reward suicides...
-    for(auto &kv : bulletMap){
-        Bullet &b = kv.second;
-        std::string bId = b.getParentId();
-        if(deadAgentIds.find(bId) != deadAgentIds.end()){
-            bulletDeletionSet.insert(bId);
-        }
-    }
-
-    for(auto &agentId : deadAgentIds){
-        activeAgentMap.erase(agentId);
-    }
-
-
     for(auto &bulletId : bulletDeletionSet){
         bulletMap.erase(bulletId);
     }
@@ -107,9 +91,9 @@ void Game::deletionPhase(void){
 }
 
 void Game::drawPhase(void){
-    for(auto &kv : activeAgentMap){
+    for(auto &kv : allAgents){
         Agent &thisAgent = kv.second;
-        mWindow.draw(thisAgent);
+        if(!thisAgent.hasDied()) mWindow.draw(thisAgent);
     }
     for(auto &kv : bulletMap){
         Bullet &curBullet = kv.second;

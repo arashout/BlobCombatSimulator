@@ -17,7 +17,7 @@ Agent::Agent(unsigned genNum) : fov(*this), inputVector(NUM_INPUTS)
     isDead = false;
     timeAlive = 0.0;
     kills = 0;
-    fitness = 0;
+    fitness = 0.0;
     shotTimer = shotChargeTime;
 
     // Ship shape and colour adjusted here
@@ -163,6 +163,7 @@ void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){
                         );
             if(isBulletCollision){
                 isDead = true;
+                b.incrementParentKills();
                 b.setExpiry(true);
             }
         }
@@ -176,7 +177,7 @@ void Agent::checkAgents(const std::unordered_map<std::string, Agent> &agentMap){
 
     for(auto &kv2 : agentMap){
         const Agent &thatAgent = kv2.second;
-        if(thatAgent.getId() != id){
+        if(!thatAgent.hasDied() && thatAgent.getId() != id){
             if(hasAgentInSights(thatAgent)) inputVector(nnParam::seeAgentIndex) = nnParam::floatTrue;
 
             if(canSeeEntity(thatAgent)) inputVector(nnParam::seeAgentIndex) = nnParam::floatTrue;
@@ -194,7 +195,7 @@ sf::Vector2f Agent::computeNormalizedPosition(const sf::Vector2f &pos, const flo
     return sf::Vector2f(normX, normY);
 }
 
-bool Agent::hasDied(void){
+bool Agent::hasDied(void) const{
     return isDead;
 }
 
@@ -206,6 +207,14 @@ void Agent::setRotation(const float heading){
     shape.setRotation(heading);
 }
 
-void Agent::resetIdCount(void){
-    idCount = 0;
+void Agent::incrementKillCount(void){
+    kills++;
+}
+
+float Agent::computeFitness(void){
+    if(fitness != 0.0) return fitness; // Cached
+
+    if(isDead) fitness = kills*10 + timeAlive*3;
+    else fitness = kills*10 + (1/timeAlive)*10 + 20;
+    return fitness;
 }

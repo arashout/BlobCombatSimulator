@@ -2,6 +2,7 @@
 #define BULLET_HPP
 
 #include "entity.hpp"
+class Agent;
 
 class Bullet : public Entity
 {
@@ -10,12 +11,13 @@ public:
            const sf::Vector2f p,
            const sf::Vector2f v,
            const float heading,
-           Entity &agent
+           Agent &agent
     );
     void update(const float dt,const sf::RenderWindow &window);
     bool isExpired(void) const;
     void setExpiry(bool expiryValue);
     std::string getParentId(void) const;
+    void incrementParentKills(void);
 
 private:
     static long count;
@@ -24,7 +26,7 @@ private:
     const float baseSpeed = 250;
     const float radius = 3;
     // Agent that fired this bullet
-    Entity &agentParent;
+    Agent &parentAgent;
 
 };
 

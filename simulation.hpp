@@ -2,6 +2,7 @@
 #define SIMULATION_HPP
 
 #include <unordered_map>
+#include <vector>
 #include "game.hpp"
 #include "agent.hpp"
 
@@ -11,13 +12,12 @@ public:
     Simulation();
 private:
     void singleGame(std::unordered_map<std::string, Agent> &batchAgents, sf::RenderWindow &window);
-    void singleRound(std::unordered_map<std::string, Agent> &currentPopulation, sf::RenderWindow &window);
+    void singleRound(std::vector<Agent> &currentPopulation, sf::RenderWindow &window);
 
-    std::unordered_map<std::string, Agent> initializePopulation(unsigned genNum);
+    void initializePopulation(unsigned genNum);
 
 
-    std::unordered_map<std::string, Agent> agentPopulation;
-    sf::RenderWindow mWindow;
+    std::vector<Agent> agentPopulation;
 };
 
 #endif // SIMULATION_HPP

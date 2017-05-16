@@ -27,7 +27,9 @@ public:
     void setPosition(const sf::Vector2f p);
     void setRotation(const float heading);
     static void resetIdCount(void);
-    bool hasDied(void);
+    bool hasDied(void) const;
+    void incrementKillCount(void);
+    float computeFitness(void);
     void fillInputVector(
             const std::unordered_map<std::string, Agent> &agentMap,
             std::unordered_map<std::string, Bullet> &bulletMap,
@@ -79,7 +81,7 @@ private:
         sf::Vertex raySights[2]; // Sight representing bullet trajectory
 
         const float viewingAngle = 50;
-        const float viewingDistance = 400;
+        const float viewingDistance = 200;
 
         sf::Vector2f curHeadingVector;
 

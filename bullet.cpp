@@ -1,5 +1,6 @@
 #include "bullet.hpp"
 #include "sfmlvector.hpp"
+#include "agent.hpp"
 
 // Setup static variable that keeps track of number of bullets fired
 // This is used for unique id creation
@@ -8,8 +9,8 @@ long Bullet::count = 0;
 Bullet::Bullet(const sf::Vector2f p,
                const sf::Vector2f v,
                const float heading,
-               Entity &agent) :
-    agentParent(agent)
+               Agent &agent) :
+    parentAgent(agent)
 {
     // ID creation
     id = "B" + std::to_string(count);
@@ -37,5 +38,8 @@ void Bullet::kinematics(const float dt){
     shape.setPosition(newPosition);
 }
 std::string Bullet::getParentId(void) const{
-    return agentParent.getId();
+    return parentAgent.getId();
+}
+void Bullet::incrementParentKills(void){
+    parentAgent.incrementKillCount();
 }

@@ -3,21 +3,21 @@
 #include "simulationparameters.hpp"
 
 Simulation::Simulation() {
-    std::unordered_map<std::string, Agent> agentPopulation = initializePopulation(0);
+    // Initialize generation 0 population
+    initializePopulation(0);
 
     sf::RenderWindow mainWindow(sf::VideoMode(600, 600), "Blob Combat Simulator!");
+
     singleRound(agentPopulation, mainWindow);
 
 }
 
-void Simulation::singleRound(std::unordered_map<std::string, Agent> &currentPopulation,
-                             sf::RenderWindow &window){
+void Simulation::singleRound(std::vector<Agent> &currentPopulation, sf::RenderWindow &window){
     std::unordered_map<std::string, Agent> currentBatch;
 
     unsigned counter = 1;
 
-    for(auto &kv : currentPopulation){
-        Agent &a = kv.second;
+    for(auto &a : currentPopulation){
         currentBatch.insert(std::make_pair(a.getId(), a));
 
         if(counter % simParams::batchSize == 0){
@@ -35,13 +35,10 @@ void Simulation::singleGame(std::unordered_map<std::string, Agent> &batchAgents,
 }
 
 
-std::unordered_map<std::string, Agent> Simulation::initializePopulation(unsigned genNum){
-    std::unordered_map<std::string, Agent> agentPop;
-
+void Simulation::initializePopulation(unsigned genNum){
+    agentPopulation.clear();
     for(size_t i = 0; i < (simParams::numBatches * simParams::batchSize); i++){
         Agent a(genNum);
-        agentPop.insert(std::make_pair(a.getId(), a));
+        agentPopulation.push_back(a);
     }
-
-    return agentPop;
 }
