@@ -1,6 +1,7 @@
 #include "simulation.hpp"
 #include "game.hpp"
 #include "simulationparameters.hpp"
+#include <iostream>
 
 Simulation::Simulation() {
     // Initialize generation 0 population
@@ -8,16 +9,17 @@ Simulation::Simulation() {
 
     sf::RenderWindow mainWindow(sf::VideoMode(600, 600), "Blob Combat Simulator!");
 
-    singleRound(agentPopulation, mainWindow);
+    singleRound(mainWindow);
+    scoreRound();
 
 }
 
-void Simulation::singleRound(std::vector<Agent> &currentPopulation, sf::RenderWindow &window){
+void Simulation::singleRound(sf::RenderWindow &window){
     std::unordered_map<std::string, Agent> currentBatch;
 
     unsigned counter = 1;
 
-    for(auto &a : currentPopulation){
+    for(auto &a : agentPopulation){
         currentBatch.insert(std::make_pair(a.getId(), a));
 
         if(counter % simParams::batchSize == 0){
@@ -34,6 +36,12 @@ void Simulation::singleGame(std::unordered_map<std::string, Agent> &batchAgents,
     game.run();
 }
 
+void Simulation::scoreRound(void){
+
+    for(Agent &a : agentPopulation){
+        std::cout << a.getId() << " : " << std::to_string(a.computeFitness()) << std::endl;
+    }
+}
 
 void Simulation::initializePopulation(unsigned genNum){
     agentPopulation.clear();

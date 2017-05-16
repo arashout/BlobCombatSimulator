@@ -17,6 +17,7 @@ private:
     std::unordered_map<std::string, Bullet> bulletMap;
     std::unordered_set<std::string> bulletDeletionSet;
     std::unordered_map<std::string, Agent> &allAgents;
+    std::unordered_set<std::string> deadAgents;
 
     void handleEvents(void);
     void updatePhase(const float elapsedTime);
@@ -26,7 +27,6 @@ private:
     void reset();
     void pause();
 
-    const size_t numAgents = 4;
     sf::CircleShape spawnCircle;
 };
 

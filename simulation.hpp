@@ -12,8 +12,8 @@ public:
     Simulation();
 private:
     void singleGame(std::unordered_map<std::string, Agent> &batchAgents, sf::RenderWindow &window);
-    void singleRound(std::vector<Agent> &currentPopulation, sf::RenderWindow &window);
-
+    void singleRound(sf::RenderWindow &window);
+    void scoreRound(void);
     void initializePopulation(unsigned genNum);
 
 

@@ -12,7 +12,7 @@ Game::Game(sf::RenderWindow &window, std::unordered_map<std::__cxx11::string, Ag
 
     // Circle used for spawning agents
     spawnCircle.setRadius(r);
-    spawnCircle.setPointCount(numAgents);
+    spawnCircle.setPointCount(allAgents.size());
     spawnCircle.setOrigin(r,r);
     spawnCircle.setPosition(screenMidpoint);
 
@@ -58,11 +58,12 @@ void Game::run(void){
         mWindow.display();
 
         // Last agent remaining marks end of game
-        if(allAgents.size() == 1) break;
+        if(deadAgents.size() >= (allAgents.size() - 1)) break;
         // If time limit reached
         if(totalElapsedTime > simParams::maxTime) break;
 
     }
+
 }
 void Game::updatePhase(const float elapsedTime){
     // Agent Updates
@@ -73,6 +74,7 @@ void Game::updatePhase(const float elapsedTime){
             thisAgent.execute(elapsedTime, bulletMap);
             thisAgent.update(elapsedTime, mWindow);
         }
+        else deadAgents.insert(thisAgent.getId());
     }
 
     // Bullet updates - With range-for loop
