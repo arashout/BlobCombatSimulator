@@ -67,5 +67,5 @@ void Agent::FieldOfVision::updateRays(const float heading, const sf::Vector2f &p
     ray2[1].position = endPoint2;
     // Update sights position
     raySights[0].position = position;
-    raySights[1] = curHeadingVector*fovParams::viewingDistance + position;
+    raySights[1] = curHeadingVector*fovParams::sightDistance + position;
 }

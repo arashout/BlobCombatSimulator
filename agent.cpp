@@ -10,6 +10,17 @@ long Agent::idCount = 0;
 
 Agent::Agent(unsigned genNum) : fov(*this), inputVector(NUM_INPUTS)
 {
+    setup(genNum);
+}
+
+Agent::Agent(unsigned genNum, Agent parent) :
+    fov(*this), dna(parent.dna), inputVector(NUM_INPUTS)
+{
+    setup(genNum);
+}
+
+void Agent::setup(unsigned genNum)
+{
     id = "G" + std::to_string(genNum) + "A" + std::to_string(idCount);
     idCount++;
     // Defaults
@@ -32,8 +43,8 @@ Agent::Agent(unsigned genNum) : fov(*this), inputVector(NUM_INPUTS)
     eye.setOrigin(agentParams::eyeRadius, agentParams::eyeRadius);
 
     velocity = sf::Vector2f(0,0);
-
 }
+
 void Agent::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     target.draw(fov);
     target.draw(shape);
@@ -197,9 +208,5 @@ void Agent::incrementKillCount(void){
 }
 
 float Agent::computeFitness(void) const{
-    float fitness;
-
-    if(isDead) fitness = kills*10 + timeAlive*3;
-    else fitness = kills*10 + (1/timeAlive)*10 + 20;
-    return fitness;
+    return !isDead*10 + kills*10 + timeAlive/2.0f;
 }

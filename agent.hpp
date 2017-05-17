@@ -12,7 +12,7 @@ class Agent : public Entity
 {
 public:
     Agent(unsigned genNum);
-
+    Agent(unsigned genNum, Agent parent);
     Agent& operator=(const Agent a){
         // Copy the important stuff!
         dna = a.dna;
@@ -25,7 +25,7 @@ public:
     bool operator<(const Agent a) const{
         return computeFitness() < a.computeFitness();
     }
-
+    void mutate(void){ dna.mutate();}
     void update(const float dt, const sf::RenderWindow &window);
     void express(const float dt, std::unordered_map<std::string, Bullet> &bulletMap);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -50,6 +50,7 @@ private:
     float shotTimer;
     bool canShoot;
 
+    void setup(unsigned genNum);
     void applyInputs(const float dt, std::unordered_map<std::string, Bullet>& bulletMap);
     void kinematics(const float dt);
     void thrust(const float dt, const float direction);

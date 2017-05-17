@@ -1,11 +1,8 @@
 #include <iostream>
 #include "simulation.hpp"
-#include "dna.hpp"
 
 int main()
 {
-    //Simulation s;
-    DNA d;
-    d.mutate();
+    Simulation s;
     return 0;
 }

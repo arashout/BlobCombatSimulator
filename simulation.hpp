@@ -14,6 +14,7 @@ private:
     void singleGame(std::unordered_map<std::string, Agent> &batchAgents, sf::RenderWindow &window);
     std::vector<Agent> singleRound(sf::RenderWindow &window, std::vector<Agent> &agentPop);
     std::vector<Agent> initializePopulation(unsigned genNum);
+    std::vector<Agent> initializePopulation(unsigned genNum, Agent winner);
     Agent selection(std::vector<Agent> &agents);
 };
 

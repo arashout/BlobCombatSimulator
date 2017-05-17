@@ -11,10 +11,12 @@ Simulation::Simulation() {
 
     sf::RenderWindow mainWindow(sf::VideoMode(600, 600), "Blob Combat Simulator!");
     // Initialize generation 0 population
-    std::vector<Agent> startPopulation = initializePopulation(0);
-    std::vector<Agent> testedAgentPopulation = singleRound(mainWindow, startPopulation);
-    selection(testedAgentPopulation);
-
+    std::vector<Agent> currentPopulation = initializePopulation(0);
+    for(size_t i = 1; i <= simParams::numGenerations; i++){
+        std::vector<Agent> testedAgentPopulation = singleRound(mainWindow, currentPopulation);
+        currentPopulation = initializePopulation(i, selection(testedAgentPopulation));
+        std::cout << "Generation: " << std::to_string(i) << std::endl;
+    }
 }
 
 std::vector<Agent> Simulation::singleRound(sf::RenderWindow &window, std::vector<Agent> &agentPop){
@@ -58,9 +60,15 @@ std::vector<Agent> Simulation::initializePopulation(unsigned genNum){
     return agents;
 }
 
-std::vector<Agent> Simulation::initializePopulation(unsigned genNum, Agent &winner)
+std::vector<Agent> Simulation::initializePopulation(unsigned genNum, Agent winner)
 {
-
+    std::vector<Agent> agents;
+    for(size_t i = 0; i < (simParams::numBatches * simParams::batchSize); i++){
+        Agent a(genNum, winner);
+        a.mutate();
+        agents.push_back(a);
+    }
+    return agents;
 }
 
 /**

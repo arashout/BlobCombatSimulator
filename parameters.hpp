@@ -7,10 +7,11 @@
 #include <vector>
 
 namespace simParams {
-    const unsigned numBatches = 3;
+    const unsigned numBatches = 10;
     const unsigned batchSize = 4;
     const float maxTime = 10;
-    const float gameSpeed = 1;
+    const float gameSpeed = 3;
+    const unsigned numGenerations = 100;
 }
 
 namespace agentParams {
@@ -24,8 +25,9 @@ namespace agentParams {
 }
 
 namespace fovParams {
-    const float viewingAngle = 50;
-    const float viewingDistance = 300;
+    const float viewingAngle = 60;
+    const float sightDistance = 400;
+    const float viewingDistance = 200;
 }
 
 namespace nnParam {

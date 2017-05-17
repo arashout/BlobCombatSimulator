@@ -39,7 +39,7 @@ void Game::run(void){
     // run the program as long as the window is open
     while (mWindow.isOpen())
     {
-        float elapsedTime = clock.getElapsedTime().asSeconds();
+        float elapsedTime = clock.getElapsedTime().asSeconds() * simParams::gameSpeed;
         totalElapsedTime += elapsedTime;
 
         clock.restart();
