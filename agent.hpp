@@ -29,11 +29,8 @@ public:
     }
 
     void update(const float dt, const sf::RenderWindow &window);
-    void execute(const float dt, std::unordered_map<std::string, Bullet>& bulletMap);
-    void shoot(std::unordered_map<std::string, Bullet>& bulletMap, const bool wantsToShoot);
+    void express(const float dt, std::unordered_map<std::string, Bullet> &bulletMap);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-    bool hasAgentInSights(const Agent &thatAgent) const;
-    bool canSeeEntity(const Entity &thatEntity) const;
     void setId(const std::string newId);
     void setPosition(const sf::Vector2f p);
     void setRotation(const float heading);
@@ -55,20 +52,21 @@ private:
     float shotTimer;
     bool canShoot;
 
-    sf::CircleShape eye;
-
     void applyInputs(const float dt, std::unordered_map<std::string, Bullet>& bulletMap);
-    void express(const float dt, std::unordered_map<std::string, Bullet> &bulletMap);
     void kinematics(const float dt);
     void thrust(const float dt, const float direction);
     void rotate(const float dt, const float direction);
+    void shoot(std::unordered_map<std::string, Bullet>& bulletMap, const bool wantsToShoot);
 
     void checkBullets(std::unordered_map<std::string, Bullet> &bulletMap);
     void checkAgents(const std::unordered_map<std::string, Agent> &agentMap);
+    bool hasAgentInSights(const Agent &thatAgent) const;
+    bool canSeeEntity(const Entity &thatEntity) const;
+
     float computeNormalizedShotTimer(void) const;
     sf::Vector2f computeNormalizedPosition(const sf::Vector2f &pos, const float xMax, const float yMax) const;
 
-
+    sf::CircleShape eye;
     class FieldOfVision : public sf::Drawable{
     public:
         FieldOfVision(Agent &parentAgent);

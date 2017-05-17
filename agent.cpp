@@ -61,27 +61,12 @@ void Agent::update(const float dt, const sf::RenderWindow &window){
     timeAlive += dt;
 }
 
-void Agent::execute(const float dt, std::unordered_map<std::__cxx11::string, Bullet> &bulletMap){
-    if(id=="Player") applyInputs(dt, bulletMap);
-    else express(dt, bulletMap);
-}
-
 void Agent::kinematics(const float dt){
     sf::Vector2f newPosition = shape.getPosition() + velocity*dt;
     shape.setPosition(newPosition);
     // Calculate eye position
     sf::Vector2f heading = SFMLVector::vectorHeading(shape.getRotation());
     eye.setPosition(shape.getPosition() + heading*shape.getRadius());
-}
-
-void Agent::applyInputs(const float dt, std::unordered_map<std::string, Bullet>& bulletMap){
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) thrust(dt, 1);
-    else velocity -= velocity*agentParams::velocityDecay*dt;
-
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) rotate(dt, 1);
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) rotate(dt, -1);
-
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) shoot(bulletMap, true);
 }
 
 void Agent::express(const float dt, std::unordered_map<std::string, Bullet>& bulletMap){
