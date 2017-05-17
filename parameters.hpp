@@ -49,6 +49,10 @@ namespace nnParam {
     const std::vector<unsigned> topology {numInputs, 8, 8, numOutputs};
 }
 
+namespace dnaParam {
+    const float mutationChance = 0.05f;
+}
+
 namespace bulletParams {
     const float baseSpeed = 300;
     const float radius = 3;

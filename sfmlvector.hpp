@@ -61,10 +61,10 @@ public:
      * @return
      */
     static sf::Vector2f getRandPosition(const EDGE edge,
-                                                const unsigned xMax,
-                                                const unsigned yMax,
-                                                const float characterLength
-                                                );
+                                        const unsigned xMax,
+                                        const unsigned yMax,
+                                        const float characterLength
+                                        );
 
 };
 

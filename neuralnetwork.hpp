@@ -3,17 +3,22 @@
 
 #include <Eigen/Core>
 #include <vector>
+
 class NeuralNetwork
 {
 public:
     NeuralNetwork(const std::vector<unsigned> &topology);
+    NeuralNetwork(const NeuralNetwork &nn);
     void feedforward(const Eigen::VectorXf &inputs);
     Eigen::VectorXf computePrediction(void) const;
 
-    void setWeights(const unsigned matrixIndex, const Eigen::MatrixXf &newWeights);
-    Eigen::MatrixXf getWeights(const unsigned matrixIndex) const;
     void displayWeights(void) const;
     void displayLayers(void) const;
+
+    unsigned getNumLayers() const;
+    std::vector<Eigen::MatrixXf> getWeightsMatrices() const;
+    void setWeightsMatrices(const std::vector<Eigen::MatrixXf> &newWeights);
+
 private:
     unsigned numLayers;
     std::vector<Eigen::VectorXf> layers;

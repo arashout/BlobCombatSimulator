@@ -8,8 +8,9 @@ class DNA
 public:
     DNA();
     DNA(NeuralNetwork &nn);
-    void mutate(void);
     DNA getDNA(void) const;
+    void setDNA(const DNA dna);
+    void mutate(void);
     NeuralNetwork brain;
 private:
 

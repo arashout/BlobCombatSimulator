@@ -41,6 +41,13 @@ NeuralNetwork::NeuralNetwork(const std::vector<unsigned> &topology)
     }
 }
 
+NeuralNetwork::NeuralNetwork(const NeuralNetwork &nn)
+{
+    numLayers = nn.numLayers;
+    layers = nn.layers;
+    weightsMatrices = nn.weightsMatrices;
+}
+
 void NeuralNetwork::feedforward(const Eigen::VectorXf &inputs){
     // Set input layer to have given input values
     layers[0] = inputs;
@@ -70,16 +77,24 @@ void NeuralNetwork::displayLayers(void) const{
     }
 }
 
+unsigned NeuralNetwork::getNumLayers() const
+{
+    return numLayers;
+}
+
+std::vector<Eigen::MatrixXf> NeuralNetwork::getWeightsMatrices() const
+{
+    return weightsMatrices;
+}
+
+void NeuralNetwork::setWeightsMatrices(const std::vector<Eigen::MatrixXf> &newWeights)
+{
+    weightsMatrices = newWeights;
+}
+
 void NeuralNetwork::displayWeights(void) const{
     for(auto&& w : weightsMatrices){
         std::cout << w << std::endl << "____" << std::endl;
     }
 }
 
-void NeuralNetwork::setWeights(const unsigned matrixIndex, const Eigen::MatrixXf &newWeights){
-    weightsMatrices[matrixIndex] = newWeights;
-}
-
-Eigen::MatrixXf NeuralNetwork::getWeights(const unsigned matrixIndex) const{
-    return weightsMatrices[matrixIndex];
-}
