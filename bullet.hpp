@@ -23,8 +23,6 @@ private:
     static long count;
     void kinematics(const float dt);
     bool expired = false;
-    const float baseSpeed = 250;
-    const float radius = 3;
     // Agent that fired this bullet
     Agent &parentAgent;
 

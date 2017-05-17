@@ -1,6 +1,6 @@
 #include "game.hpp"
 #include "sfmlvector.hpp"
-#include "simulationparameters.hpp"
+#include "parameters.hpp"
 
 Game::Game(sf::RenderWindow &window, std::unordered_map<std::__cxx11::string, Agent> &agents) :
       mWindow(window), allAgents(agents)

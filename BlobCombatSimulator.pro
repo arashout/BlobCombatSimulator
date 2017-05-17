@@ -33,8 +33,5 @@ HEADERS += \
     game.hpp \
     dna.h \
     neuralnetwork.hpp \
-    nnparameters.hpp \
     simulation.hpp \
-    simulationparameters.hpp \
-    agentparameters.hpp \
-    fovparameters.hpp
+    parameters.hpp

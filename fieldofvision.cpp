@@ -2,7 +2,7 @@
 #include "sfmlvector.hpp"
 #include <math.h>
 #include <iostream>
-#include "fovparameters.hpp"
+#include "parameters.hpp"
 
 class Agent;
 

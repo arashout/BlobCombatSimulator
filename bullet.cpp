@@ -1,6 +1,7 @@
 #include "bullet.hpp"
 #include "sfmlvector.hpp"
 #include "agent.hpp"
+#include "parameters.hpp"
 
 // Setup static variable that keeps track of number of bullets fired
 // This is used for unique id creation
@@ -17,10 +18,10 @@ Bullet::Bullet(const sf::Vector2f p,
     count++;
 
     // Shape setup
-    shape = sf::CircleShape(radius);
-    shape.setOrigin(radius, radius);
+    shape = sf::CircleShape(bulletParams::radius);
+    shape.setOrigin(bulletParams::radius, bulletParams::radius);
     shape.setPosition(p);
-    velocity = v + baseSpeed * SFMLVector::vectorHeading(heading);
+    velocity = v + bulletParams::baseSpeed*SFMLVector::vectorHeading(heading);
 }
 void Bullet::update(const float dt, const sf::RenderWindow &window){
     kinematics(dt);

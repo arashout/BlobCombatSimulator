@@ -3,8 +3,7 @@
 #include "sfmlvector.hpp"
 #include <math.h>
 #include <iostream>
-#include "nnparameters.hpp"
-#include "agentparameters.hpp"
+#include "parameters.hpp"
 
 // This is used for unique id creation
 long Agent::idCount = 0;
