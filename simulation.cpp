@@ -4,12 +4,16 @@
 #include <iostream>
 #include <algorithm>
 
+
 Simulation::Simulation() {
+    // Set random seed
+    std::srand((unsigned int) time(0));
+
     sf::RenderWindow mainWindow(sf::VideoMode(600, 600), "Blob Combat Simulator!");
     // Initialize generation 0 population
     std::vector<Agent> startPopulation = initializePopulation(0);
     std::vector<Agent> testedAgentPopulation = singleRound(mainWindow, startPopulation);
-    scoreAgents(testedAgentPopulation);
+    selection(testedAgentPopulation);
 
 }
 
@@ -45,14 +49,6 @@ void Simulation::singleGame(std::unordered_map<std::string, Agent> &batchAgents,
     game.run();
 }
 
-void Simulation::scoreAgents(std::vector<Agent> &agents){
-    std::sort(agents.begin(), agents.end());
-    std::reverse(agents.begin(), agents.end());
-    for(Agent &a : agents){
-        std::cout << a.getId() << " : " << std::to_string(a.computeFitness()) << std::endl;
-    }
-}
-
 std::vector<Agent> Simulation::initializePopulation(unsigned genNum){
     std::vector<Agent> agents;
     for(size_t i = 0; i < (simParams::numBatches * simParams::batchSize); i++){
@@ -60,4 +56,31 @@ std::vector<Agent> Simulation::initializePopulation(unsigned genNum){
         agents.push_back(a);
     }
     return agents;
+}
+
+/**
+ * @brief Select an agent to pass on it's traits
+ * @param agents
+ */
+Agent Simulation::selection(std::vector<Agent> &agents){
+    std::sort(agents.begin(), agents.end());
+    std::reverse(agents.begin(), agents.end());
+    float totalFitness = 0;
+    for(size_t i = 0; i < agents.size(); i++){
+        Agent &a = agents[i];
+        totalFitness += a.computeFitness();
+    }
+    // random value between 0 and totalFitness
+    float randVal = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/totalFitness));
+
+    float selectionSum = 0;
+    unsigned selectionIndex;
+    for(size_t i = 0; i < agents.size(); i++){
+        selectionSum += agents[i].computeFitness();
+        if(selectionSum > randVal){
+            selectionIndex = i;
+            break;
+        }
+    }
+    return agents[selectionIndex];
 }

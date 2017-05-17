@@ -8,8 +8,6 @@
 #include <Eigen/Core>
 #include <dna.h>
 
-
-
 class Agent : public Entity
 {
 public:

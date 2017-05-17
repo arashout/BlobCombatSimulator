@@ -13,8 +13,8 @@ public:
 private:
     void singleGame(std::unordered_map<std::string, Agent> &batchAgents, sf::RenderWindow &window);
     std::vector<Agent> singleRound(sf::RenderWindow &window, std::vector<Agent> &agentPop);
-    void scoreAgents(std::vector<Agent> &agents);
     std::vector<Agent> initializePopulation(unsigned genNum);
+    Agent selection(std::vector<Agent> &agents);
 };
 
 #endif // SIMULATION_HPP
