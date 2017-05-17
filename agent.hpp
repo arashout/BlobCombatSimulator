@@ -6,7 +6,7 @@
 #include "bullet.hpp"
 #include <SFML/Graphics/Vertex.hpp>
 #include <Eigen/Core>
-#include <dna.h>
+#include <dna.hpp>
 
 class Agent : public Entity
 {

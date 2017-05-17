@@ -58,6 +58,11 @@ std::vector<Agent> Simulation::initializePopulation(unsigned genNum){
     return agents;
 }
 
+std::vector<Agent> Simulation::initializePopulation(unsigned genNum, Agent &winner)
+{
+
+}
+
 /**
  * @brief Select an agent to pass on it's traits
  * @param agents

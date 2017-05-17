@@ -1,5 +1,5 @@
-#ifndef DNA_H
-#define DNA_H
+#ifndef DNA_HPP
+#define DNA_HPP
 
 #include "neuralnetwork.hpp"
 
@@ -7,7 +7,7 @@ class DNA
 {
 public:
     DNA();
-    DNA(NeuralNetwork &nn);
+    DNA(const DNA &dna);
     DNA getDNA(void) const;
     void setDNA(const DNA dna);
     void mutate(void);
@@ -16,4 +16,4 @@ private:
 
 };
 
-#endif // DNA_H
+#endif // DNA_HPP

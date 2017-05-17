@@ -31,7 +31,7 @@ HEADERS += \
     sfmlvector.hpp \
     agent.hpp \
     game.hpp \
-    dna.h \
     neuralnetwork.hpp \
     simulation.hpp \
-    parameters.hpp
+    parameters.hpp \
+    dna.hpp

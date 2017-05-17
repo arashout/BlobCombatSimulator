@@ -1,6 +1,6 @@
 #include <iostream>
 #include "simulation.hpp"
-#include "dna.h"
+#include "dna.hpp"
 
 int main()
 {
