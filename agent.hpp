@@ -13,13 +13,23 @@
 class Agent : public Entity
 {
 public:
-    Agent();
     Agent(unsigned genNum);
+
+    Agent& operator=(const Agent a){
+        // Copy the important stuff!
+        dna = a.dna;
+        isDead = a.isDead;
+        timeAlive = a.timeAlive;
+        kills = a.kills;
+        return *this;
+    }
+
+    bool operator<(const Agent a) const{
+        return computeFitness() < a.computeFitness();
+    }
+
     void update(const float dt, const sf::RenderWindow &window);
-    void execute(
-            const float dt,
-            std::unordered_map<std::string, Bullet>& bulletMap
-            );
+    void execute(const float dt, std::unordered_map<std::string, Bullet>& bulletMap);
     void shoot(std::unordered_map<std::string, Bullet>& bulletMap, const bool wantsToShoot);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     bool hasAgentInSights(const Agent &thatAgent) const;

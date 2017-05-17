@@ -5,7 +5,7 @@
 #include <algorithm>
 
 bool agentCmp(const Agent &a1,const Agent &a2){
-   return a1.getId() < a2.getId();
+   return a1.computeFitness() < a2.computeFitness();
 }
 
 Simulation::Simulation() {
@@ -50,7 +50,8 @@ void Simulation::singleGame(std::unordered_map<std::string, Agent> &batchAgents,
 }
 
 void Simulation::scoreAgents(std::vector<Agent> &agents){
-    std::sort(agents.begin(), agents.end());
+    std::sort(agents.begin(), agents.end(), agentCmp);
+    std::reverse(agents.begin(), agents.end());
     for(Agent &a : agents){
         std::cout << a.getId() << " : " << std::to_string(a.computeFitness()) << std::endl;
     }
