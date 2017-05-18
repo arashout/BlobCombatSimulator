@@ -17,7 +17,7 @@ public:
     bool isExpired(void) const;
     void setExpiry(bool expiryValue);
     std::string getParentId(void) const;
-    void incrementParentKills(void);
+    void incrementHits(void);
 
 private:
     static long count;

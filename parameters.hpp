@@ -1,40 +1,38 @@
 #ifndef PARAMETERS_HPP
 #define PARAMETERS_HPP
 
-#define NUM_INPUTS 6
-#define NUM_OUTPUTS 4
-
 #include <vector>
 
 namespace simParams {
     const unsigned numBatches = 10;
-    const unsigned batchSize = 4;
+    const unsigned batchSize = 3;
     const float maxTime = 10;
-    const float gameSpeed = 3;
+    const float gameSpeed = 1;
     const unsigned numGenerations = 100;
 }
 
 namespace agentParams {
     const float terminalSpeed = 150;
     const float velocityDecay = .5;
-    const float thrustPower = 200;
-    const float rotatePower = 200;
+    const float thrustPower = 300;
+    const float rotatePower = 150;
     const float agentRadius = 15;
     const float shotChargeTime = 1; // Time [s] to pass before next shot
     const float eyeRadius = 3;
+    const unsigned numLives = 3;
 }
 
 namespace fovParams {
-    const float viewingAngle = 60;
-    const float sightDistance = 400;
-    const float viewingDistance = 200;
+    const float viewingAngle = 30;
+    const float sightDistance = 500;
+    const float viewingDistance = 400;
 }
 
 namespace nnParam {
     const float floatTrue = 1.0f;
     const float floatFalse = 0.0f;
 
-    const unsigned numInputs = 6 ;
+    const unsigned numInputs = 4;
     const unsigned short sightsIndex = 0;
     const unsigned short seeAgentIndex = 1;
     const unsigned short seeBulletIndex = 2;
@@ -52,7 +50,7 @@ namespace nnParam {
 }
 
 namespace dnaParam {
-    const float mutationChance = 0.05f;
+    const float mutationChance = 0.1f;
 }
 
 namespace bulletParams {

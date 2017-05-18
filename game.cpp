@@ -25,7 +25,7 @@ Game::Game(sf::RenderWindow &window, std::unordered_map<std::__cxx11::string, Ag
 
         a.setPosition(globalPointPosition);
         sf::Vector2f headingVector = screenMidpoint - globalPointPosition;
-        float faceCenterHeading = SFMLVector::heading(headingVector);
+        float faceCenterHeading = SFMLVector::heading(headingVector) - 180;
         a.setRotation(faceCenterHeading);
         counter++;
     }

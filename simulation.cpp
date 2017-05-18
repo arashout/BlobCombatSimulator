@@ -14,7 +14,12 @@ Simulation::Simulation() {
     std::vector<Agent> currentPopulation = initializePopulation(0);
     for(size_t i = 1; i <= simParams::numGenerations; i++){
         std::vector<Agent> testedAgentPopulation = singleRound(mainWindow, currentPopulation);
-        currentPopulation = initializePopulation(i, selection(testedAgentPopulation));
+        std::vector<Agent> selectedPopulation = selection(testedAgentPopulation);
+        std::cout << "Tested Population scores" << std::endl;
+        printScoreBoard(testedAgentPopulation);
+        std::cout << "Selected Population scores" << std::endl;
+        printScoreBoard(selectedPopulation);
+        currentPopulation = initializePopulation(i, selectedPopulation);
         std::cout << "Generation: " << std::to_string(i) << std::endl;
     }
 }
@@ -60,22 +65,23 @@ std::vector<Agent> Simulation::initializePopulation(unsigned genNum){
     return agents;
 }
 
-std::vector<Agent> Simulation::initializePopulation(unsigned genNum, Agent winner)
+std::vector<Agent> Simulation::initializePopulation(unsigned genNum, std::vector<Agent> winners)
 {
-    std::vector<Agent> agents;
-    for(size_t i = 0; i < (simParams::numBatches * simParams::batchSize); i++){
+    std::vector<Agent> childrenAgents;
+    for(Agent winner : winners){
         Agent a(genNum, winner);
         a.mutate();
-        agents.push_back(a);
+        childrenAgents.push_back(a);
     }
-    return agents;
+    return childrenAgents;
 }
 
 /**
  * @brief Select an agent to pass on it's traits
  * @param agents
  */
-Agent Simulation::selection(std::vector<Agent> &agents){
+std::vector<Agent> Simulation::selection(std::vector<Agent> &agents){
+    // Compute total fitness
     std::sort(agents.begin(), agents.end());
     std::reverse(agents.begin(), agents.end());
     float totalFitness = 0;
@@ -83,17 +89,29 @@ Agent Simulation::selection(std::vector<Agent> &agents){
         Agent &a = agents[i];
         totalFitness += a.computeFitness();
     }
-    // random value between 0 and totalFitness
-    float randVal = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/totalFitness));
 
-    float selectionSum = 0;
-    unsigned selectionIndex;
+    std::vector<Agent> selectedAgents;
     for(size_t i = 0; i < agents.size(); i++){
-        selectionSum += agents[i].computeFitness();
-        if(selectionSum > randVal){
-            selectionIndex = i;
-            break;
+        // random value between 0 and totalFitness
+        float randVal = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/totalFitness));
+
+        float selectionSum = 0;
+        unsigned selectionIndex;
+        for(size_t i = 0; i < agents.size(); i++){
+            selectionSum += agents[i].computeFitness();
+            if(selectionSum > randVal){
+                selectionIndex = i;
+                break;
+            }
         }
+        selectedAgents.push_back(agents[selectionIndex]);
     }
-    return agents[selectionIndex];
+    return selectedAgents;
+}
+
+void Simulation::printScoreBoard(std::vector<Agent> &agents)
+{
+    for(Agent &a : agents){
+        std::cout << a.getId() << " : " << std::to_string(a.computeFitness()) << std::endl;
+    }
 }

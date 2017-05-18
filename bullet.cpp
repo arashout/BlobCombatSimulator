@@ -41,6 +41,6 @@ void Bullet::kinematics(const float dt){
 std::string Bullet::getParentId(void) const{
     return parentAgent.getId();
 }
-void Bullet::incrementParentKills(void){
-    parentAgent.incrementKillCount();
+void Bullet::incrementHits(void){
+    parentAgent.incrementHits();
 }

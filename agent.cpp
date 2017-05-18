@@ -8,13 +8,13 @@
 // This is used for unique id creation
 long Agent::idCount = 0;
 
-Agent::Agent(unsigned genNum) : fov(*this), inputVector(NUM_INPUTS)
+Agent::Agent(unsigned genNum) : fov(*this), inputVector(nnParam::numInputs)
 {
     setup(genNum);
 }
 
 Agent::Agent(unsigned genNum, Agent parent) :
-    fov(*this), dna(parent.dna), inputVector(NUM_INPUTS)
+    fov(*this), dna(parent.dna), inputVector(nnParam::numInputs)
 {
     setup(genNum);
 }
@@ -27,7 +27,8 @@ void Agent::setup(unsigned genNum)
     canShoot = true;
     isDead = false;
     timeAlive = 0.0;
-    kills = 0;
+    numHits = 0;
+    numHitten = 0;
     shotTimer = agentParams::shotChargeTime;
 
     // Ship shape and colour adjusted here
@@ -135,13 +136,13 @@ void Agent::fillInputVector(
     checkBullets(bulletMap);
 
     inputVector(nnParam::shotTimerIndex) = computeNormalizedShotTimer();
-    sf::Vector2f normalizedPosition = computeNormalizedPosition(
-                shape.getPosition(),
-                window.getSize().x,
-                window.getSize().y
-                );
-    inputVector(nnParam::posXIndex) = normalizedPosition.x;
-    inputVector(nnParam::posYIndex) = normalizedPosition.y;
+//    sf::Vector2f normalizedPosition = computeNormalizedPosition(
+//                shape.getPosition(),
+//                window.getSize().x,
+//                window.getSize().y
+//                );
+//    inputVector(nnParam::posXIndex) = normalizedPosition.x;
+//    inputVector(nnParam::posYIndex) = normalizedPosition.y;
 }
 
 void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){
@@ -158,8 +159,9 @@ void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){
                         shape
                         );
             if(isBulletCollision){
-                isDead = true;
-                b.incrementParentKills();
+                numHitten++;
+                if(numHitten > agentParams::numLives) isDead = true;
+                b.incrementHits();
                 b.setExpiry(true);
             }
         }
@@ -173,7 +175,7 @@ void Agent::checkAgents(const std::unordered_map<std::string, Agent> &agentMap){
 
     for(auto &kv2 : agentMap){
         const Agent &thatAgent = kv2.second;
-        if(!thatAgent.hasDied() && thatAgent.getId() != id){
+        if( thatAgent.getId() != id){
             if(hasAgentInSights(thatAgent)) inputVector(nnParam::seeAgentIndex) = nnParam::floatTrue;
 
             if(canSeeEntity(thatAgent)) inputVector(nnParam::seeAgentIndex) = nnParam::floatTrue;
@@ -191,10 +193,6 @@ sf::Vector2f Agent::computeNormalizedPosition(const sf::Vector2f &pos, const flo
     return sf::Vector2f(normX, normY);
 }
 
-bool Agent::hasDied(void) const{
-    return isDead;
-}
-
 void Agent::setPosition(const sf::Vector2f p){
     shape.setPosition(p);
 }
@@ -203,10 +201,17 @@ void Agent::setRotation(const float heading){
     shape.setRotation(heading);
 }
 
-void Agent::incrementKillCount(void){
-    kills++;
+bool Agent::hasDied() const
+{
+    return isDead;
+}
+
+void Agent::incrementHits(void){
+    numHits++;
 }
 
 float Agent::computeFitness(void) const{
-    return !isDead*10 + kills*10 + timeAlive/2.0f;
+    float fitness = numHits*4 + !isDead*2 + timeAlive - numHitten*2;
+    if(fitness < 0) return 0;
+    return fitness;
 }

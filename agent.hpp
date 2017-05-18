@@ -18,7 +18,8 @@ public:
         dna = a.dna;
         isDead = a.isDead;
         timeAlive = a.timeAlive;
-        kills = a.kills;
+        numHits = a.numHits;
+        numHitten = a.numHitten;
         return *this;
     }
 
@@ -40,12 +41,14 @@ public:
             const std::unordered_map<std::string, Agent> &agentMap,
             std::unordered_map<std::string, Bullet> &bulletMap,
             const sf::RenderWindow &window
-        );
+            );
+    void incrementHits();
 private:
     static long idCount;
-    bool isDead;
     float timeAlive;
-    unsigned kills;
+    bool isDead;
+    unsigned numHits;
+    unsigned numHitten;
 
     float shotTimer;
     bool canShoot;
