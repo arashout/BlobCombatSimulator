@@ -4,11 +4,13 @@
 #include <vector>
 
 namespace simParams {
-    const unsigned numBatches = 10;
+    const unsigned numBatches = 20;
     const unsigned batchSize = 3;
-    const float maxTime = 10;
+    const float maxTime = 15;
     const float gameSpeed = 1;
-    const unsigned numGenerations = 100;
+    const unsigned numGenerations = 500;
+
+    const float rankProbability = .3f;
 }
 
 namespace agentParams {

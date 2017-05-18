@@ -2,6 +2,7 @@
 #include "game.hpp"
 #include "parameters.hpp"
 #include <iostream>
+#include <cmath>
 #include <algorithm>
 
 
@@ -14,7 +15,7 @@ Simulation::Simulation() {
     std::vector<Agent> currentPopulation = initializePopulation(0);
     for(size_t i = 1; i <= simParams::numGenerations; i++){
         std::vector<Agent> testedAgentPopulation = singleRound(mainWindow, currentPopulation);
-        std::vector<Agent> selectedPopulation = selection(testedAgentPopulation);
+        std::vector<Agent> selectedPopulation = rankSelection(testedAgentPopulation);
         std::cout << "Tested Population scores" << std::endl;
         printScoreBoard(testedAgentPopulation);
         std::cout << "Selected Population scores" << std::endl;
@@ -80,7 +81,7 @@ std::vector<Agent> Simulation::initializePopulation(unsigned genNum, std::vector
  * @brief Select an agent to pass on it's traits
  * @param agents
  */
-std::vector<Agent> Simulation::selection(std::vector<Agent> &agents){
+std::vector<Agent> Simulation::propSelection(std::vector<Agent> &agents){
     // Compute total fitness
     std::sort(agents.begin(), agents.end());
     std::reverse(agents.begin(), agents.end());
@@ -97,10 +98,40 @@ std::vector<Agent> Simulation::selection(std::vector<Agent> &agents){
 
         float selectionSum = 0;
         unsigned selectionIndex;
-        for(size_t i = 0; i < agents.size(); i++){
-            selectionSum += agents[i].computeFitness();
+        for(size_t j = 0; j < agents.size(); j++){
+            selectionSum += agents[j].computeFitness();
             if(selectionSum > randVal){
-                selectionIndex = i;
+                selectionIndex = j;
+                break;
+            }
+        }
+        selectedAgents.push_back(agents[selectionIndex]);
+    }
+    return selectedAgents;
+}
+
+std::vector<Agent> Simulation::rankSelection(std::vector<Agent> &agents)
+{
+    std::sort(agents.begin(), agents.end());
+    std::reverse(agents.begin(), agents.end());
+
+    std::vector<float> rankProbVector(agents.size());
+    float p = simParams::rankProbability;
+    for(size_t i = 0; i < rankProbVector.size(); i++){
+        rankProbVector[i] = p * std::pow( (1-p) , i);
+    }
+
+    std::vector<Agent> selectedAgents;
+    for(size_t i = 0; i < agents.size(); i++){
+        // random value between 0 and 1
+        float randVal = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX));
+
+        float probSum = 0;
+        unsigned selectionIndex;
+        for(size_t j = 0; j < agents.size(); j++){
+            probSum += rankProbVector[j];
+            if(probSum > randVal){
+                selectionIndex = j;
                 break;
             }
         }
