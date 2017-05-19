@@ -12,7 +12,7 @@ namespace simParams {
 
 namespace gameParams {
     const unsigned normalFPS = 60;
-    const unsigned framesPerGame = normalFPS*15;
+    const unsigned framesPerGame = normalFPS*100;
     const float gameSpeed = 1;
 }
 

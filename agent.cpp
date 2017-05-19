@@ -91,6 +91,7 @@ void Agent::applyInputs(std::unordered_map<std::string, Bullet>& bulletMap){
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) rotate(-1);
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) shoot(bulletMap, true);
+    drawInputVector();
 }
 
 void Agent::thrust(const float direction){
@@ -143,9 +144,21 @@ void Agent::fillInputVector(
     //    inputVector(nnParam::posYIndex) = normalizedPosition.y;
 }
 
-void Agent::drawInputVector(sf::RenderWindow window)
+void Agent::drawInputVector()
 {
+    curAgentPresence = inputVector(nnParam::seeAgentIndex) == nnParam::floatTrue;
+    curBulletPresence = inputVector(nnParam::seeBulletIndex) == nnParam::floatTrue;
+    curAgentSights = inputVector(nnParam::sightsIndex) == nnParam::floatTrue;
+    curCanShoot = inputVector(nnParam::shotTimerIndex) == nnParam::floatTrue;
 
+    if(curAgentPresence != prevAgentPresence) std::cout << "Agent seen" << std::endl;
+    if(curBulletPresence != prevBulletPresence) std::cout << "Bullet seen" << std::endl;
+    if(curAgentSights != prevAgentSights) std::cout << "Agent sighted" << std::endl;
+    //if(curCanShoot != prevCanShoot) std::cout << "Can shoot" << std::endl;
+    prevAgentPresence = curAgentPresence;
+    prevBulletPresence = curBulletPresence;
+    prevAgentSights = curAgentSights;
+    prevCanShoot = curCanShoot;
 }
 
 void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){
@@ -179,8 +192,7 @@ void Agent::checkAgents(const std::unordered_map<std::string, Agent> &agentMap){
     for(auto &kv2 : agentMap){
         const Agent &thatAgent = kv2.second;
         if( thatAgent.getId() != id){
-            if(hasAgentInSights(thatAgent)) inputVector(nnParam::seeAgentIndex) = nnParam::floatTrue;
-
+            if(hasAgentInSights(thatAgent)) inputVector(nnParam::sightsIndex) = nnParam::floatTrue;
             if(canSeeEntity(thatAgent)) inputVector(nnParam::seeAgentIndex) = nnParam::floatTrue;
         }
     }

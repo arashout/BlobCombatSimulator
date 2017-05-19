@@ -38,7 +38,7 @@ public:
             std::unordered_map<std::string, Bullet> &bulletMap,
             const sf::RenderWindow &window
             );
-    void drawInputVector(sf::RenderWindow &window);
+    void drawInputVector();
     void incrementHits();
     //Getters and Setters
     bool hasDied(void) const;
@@ -73,6 +73,16 @@ private:
     DNA dna;
     Eigen::VectorXf inputVector;
 
+    // Debugging for input vector
+    bool curAgentPresence;
+    bool curBulletPresence;
+    bool curAgentSights;
+    bool curCanShoot;
+
+    bool prevAgentPresence;
+    bool prevBulletPresence;
+    bool prevAgentSights;
+    bool prevCanShoot;
 };
 
 #endif // AGENT_HPP
