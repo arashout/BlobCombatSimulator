@@ -32,7 +32,7 @@ public:
     void express(std::unordered_map<std::string, Bullet> &bulletMap);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     bool canSeeEntity(const Entity &thatEntity) const;
-    unsigned computeFitness(void) const;
+    float computeFitness(void) const;
     void fillInputVector(
             const std::unordered_map<std::string, Agent> &agentMap,
             std::unordered_map<std::string, Bullet> &bulletMap,
@@ -48,8 +48,8 @@ private:
     static long idCount;
     bool isDead;
     bool canShoot;
-    unsigned numHits;
-    unsigned numHitten;
+    float numHits;
+    float numHitten;
 
     unsigned shotTimer;
 

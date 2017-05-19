@@ -203,7 +203,7 @@ void Agent::incrementHits(void){
     numHits++;
 }
 
-unsigned Agent::computeFitness(void) const{
-    unsigned fitness = 2*numHits - numHitten;
+float Agent::computeFitness(void) const{
+    float fitness = 2*numHits - numHitten;
     return fitness;
 }
