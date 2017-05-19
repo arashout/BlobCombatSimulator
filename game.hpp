@@ -20,7 +20,7 @@ private:
     std::unordered_set<std::string> deadAgents;
 
     void handleEvents(void);
-    void updatePhase(const float elapsedTime);
+    void updatePhase();
     void drawPhase(void);
     void deletionPhase(void);
 

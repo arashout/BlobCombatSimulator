@@ -26,10 +26,9 @@ void Agent::setup(unsigned genNum)
     // Defaults
     canShoot = true;
     isDead = false;
-    timeAlive = 0.0;
     numHits = 0;
     numHitten = 0;
-    shotTimer = agentParams::shotChargeTime;
+    shotTimer = agentParams::shotChargeFrames;
 
     // Ship shape and colour adjusted here
     const float &r = agentParams::agentRadius;
@@ -58,12 +57,12 @@ void Agent::update(const sf::RenderWindow &window){
     // Mirror edges - Like in PACMAN
     resetPosition(outOfBounds(window, shape.getRadius()), window, shape.getRadius());
     // Recharge shot
-    if(shotTimer >= agentParams::shotChargeTime) {
+    if(shotTimer >= agentParams::shotChargeFrames) {
         canShoot = true;
         shotTimer = 0;
     }
-    else if(shotTimer < agentParams::shotChargeTime){
-        shotTimer += .01;
+    else if(shotTimer < agentParams::shotChargeFrames){
+        shotTimer += 1;
         canShoot = false;
     }
 
@@ -100,13 +99,14 @@ void Agent::applyInputs(std::unordered_map<std::string, Bullet>& bulletMap){
 
 void Agent::thrust(const float direction){
     sf::Vector2f thrustVector = SFMLVector::vectorHeading(shape.getRotation());
-    sf::Vector2f newPosition = shape.getPosition() + thrustVector*agentParams::thrustPower;
+    sf::Vector2f addedVelocity = thrustVector*agentParams::thrustVelocity*direction;
+    sf::Vector2f newPosition = shape.getPosition() + addedVelocity;
     shape.setPosition(newPosition);
 
 }
 
 void Agent::rotate(const float direction){
-    shape.rotate(direction*agentParams::rotatePower);
+    shape.rotate(direction*agentParams::rotationVelocity);
 }
 
 void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletMap,const bool wantsToShoot){
@@ -186,7 +186,7 @@ void Agent::checkAgents(const std::unordered_map<std::string, Agent> &agentMap){
 }
 
 float Agent::computeNormalizedShotTimer(void) const{
-    return shotTimer/agentParams::shotChargeTime;
+    return shotTimer/agentParams::shotChargeFrames;
 }
 
 sf::Vector2f Agent::computeNormalizedPosition(const sf::Vector2f &pos, const float xMax, const float yMax) const{
@@ -213,7 +213,7 @@ void Agent::incrementHits(void){
 }
 
 float Agent::computeFitness(void) const{
-    float fitness = numHits*4 + !isDead*2 + timeAlive - numHitten*2;
+    float fitness = numHits*8 + !isDead*4 - numHitten*8;
     if(fitness < 0) return 0;
     return fitness;
 }

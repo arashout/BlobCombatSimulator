@@ -14,18 +14,17 @@ class Agent : public Entity
 public:
     Agent(unsigned genNum);
     Agent(unsigned genNum, Agent parent);
-    Agent& operator=(const Agent a){
+    Agent& operator=(const Agent &a){
         // Copy the important stuff!
         dna = a.dna;
         fov = a.fov;
         isDead = a.isDead;
-        timeAlive = a.timeAlive;
         numHits = a.numHits;
         numHitten = a.numHitten;
         return *this;
     }
 
-    bool operator<(const Agent a) const{
+    bool operator<(const Agent &a) const{
         return computeFitness() < a.computeFitness();
     }
     void mutate(void){ dna.mutate();}
@@ -48,12 +47,11 @@ public:
     void incrementHits();
 private:
     static long idCount;
-    float timeAlive;
     bool isDead;
     unsigned numHits;
     unsigned numHitten;
 
-    float shotTimer;
+    unsigned shotTimer;
     bool canShoot;
 
     void setup(unsigned genNum);

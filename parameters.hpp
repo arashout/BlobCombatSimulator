@@ -6,20 +6,14 @@
 namespace simParams {
     const unsigned numBatches = 1;
     const unsigned batchSize = 3;
-    const float maxTime = 15;
-    const float gameSpeed = 1;
     const unsigned numGenerations = 4;
-
     const float rankProbability = .3f;
 }
 
-namespace agentParams {
-    const float thrustPower = .5;
-    const float rotatePower = 1;
-    const float agentRadius = 15;
-    const float shotChargeTime = 1; // Time [s] to pass before next shot
-    const float eyeRadius = 3;
-    const unsigned numLives = 3;
+namespace gameParams {
+    const unsigned normalFrameRate = 60;
+    const float maxTime = 15;
+    const float gameSpeed = 1;
 }
 
 namespace fovParams {
@@ -46,15 +40,24 @@ namespace nnParam {
     const unsigned short rotateLeftIndex = 2;
     const unsigned short rotateRightIndex = 3;
 
-    const std::vector<unsigned> topology {numInputs, 2, 2, numOutputs};
+    const std::vector<unsigned> topology {numInputs, 1, numOutputs};
 }
 
 namespace dnaParam {
     const float mutationChance = 0.1f;
 }
 
+namespace agentParams {
+    const float thrustVelocity = 3;
+    const float rotationVelocity = 5;
+    const float agentRadius = 15;
+    const unsigned shotChargeFrames = gameParams::normalFrameRate*0.5; // Number of frames
+    const float eyeRadius = 3;
+    const unsigned numLives = 3;
+}
+
 namespace bulletParams {
-    const float baseSpeed = .7;
+    const float baseSpeed = 10;
     const float radius = 3;
 }
 

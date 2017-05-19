@@ -34,14 +34,15 @@ void Game::run(void){
 
     // For handling time
     sf::Clock clock;
+    sf::Time time;
     float totalElapsedTime = 0;
+    mWindow.setFramerateLimit(gameParams::normalFrameRate * gameParams::gameSpeed);
 
     // run the program as long as the window is open
     while (mWindow.isOpen())
     {
-        float elapsedTime = clock.getElapsedTime().asSeconds() * simParams::gameSpeed;
-        totalElapsedTime += elapsedTime;
-
+        time = clock.getElapsedTime();
+        std::cout << 1.0f/time.asSeconds()<< std::endl;
         clock.restart();
 
         handleEvents();
@@ -49,7 +50,7 @@ void Game::run(void){
         // clear the window with black color
         mWindow.clear(sf::Color::Black);
 
-        updatePhase(elapsedTime);
+        updatePhase();
         deletionPhase();
         drawPhase();
 
@@ -60,12 +61,12 @@ void Game::run(void){
         // Last agent remaining marks end of game
         if(deadAgents.size() >= (allAgents.size() - 1)) break;
         // If time limit reached
-        if(totalElapsedTime > simParams::maxTime) break;
+        if(totalElapsedTime > gameParams::maxTime) break;
 
     }
 
 }
-void Game::updatePhase(const float elapsedTime){
+void Game::updatePhase(){
     // Agent Updates
     for(auto &kv : allAgents){
         Agent &thisAgent = kv.second;
