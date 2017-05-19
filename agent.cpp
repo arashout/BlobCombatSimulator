@@ -8,13 +8,13 @@
 // This is used for unique id creation
 long Agent::idCount = 0;
 
-Agent::Agent(unsigned genNum) : fov(*this), inputVector(nnParam::numInputs)
+Agent::Agent(unsigned genNum) : inputVector(nnParam::numInputs)
 {
     setup(genNum);
 }
 
 Agent::Agent(unsigned genNum, Agent parent) :
-    fov(*this), dna(parent.dna), inputVector(nnParam::numInputs)
+    dna(parent.dna), inputVector(nnParam::numInputs)
 {
     setup(genNum);
 }

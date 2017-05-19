@@ -7,6 +7,7 @@
 #include <SFML/Graphics/Vertex.hpp>
 #include <Eigen/Core>
 #include <dna.hpp>
+#include "fieldofvision.hpp"
 
 class Agent : public Entity
 {
@@ -16,6 +17,7 @@ public:
     Agent& operator=(const Agent a){
         // Copy the important stuff!
         dna = a.dna;
+        fov = a.fov;
         isDead = a.isDead;
         timeAlive = a.timeAlive;
         numHits = a.numHits;
@@ -33,6 +35,7 @@ public:
     void setId(const std::string newId);
     void setPosition(const sf::Vector2f p);
     void setRotation(const float heading);
+    bool canSeeEntity(const Entity &thatEntity) const;
     static void resetIdCount(void);
     bool hasDied(void) const;
     void incrementKillCount(void);
@@ -63,32 +66,11 @@ private:
     void checkBullets(std::unordered_map<std::string, Bullet> &bulletMap);
     void checkAgents(const std::unordered_map<std::string, Agent> &agentMap);
     bool hasAgentInSights(const Agent &thatAgent) const;
-    bool canSeeEntity(const Entity &thatEntity) const;
 
     float computeNormalizedShotTimer(void) const;
     sf::Vector2f computeNormalizedPosition(const sf::Vector2f &pos, const float xMax, const float yMax) const;
 
     sf::CircleShape eye;
-    class FieldOfVision : public sf::Drawable{
-    public:
-        FieldOfVision(Agent &parentAgent);
-        void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-        void update(const float heading, const sf::Vector2f &position);
-        bool hasAgentInSights(const Agent &thatAgent) const;
-        bool canSeeEntity(const Agent &thisAgent,const Entity &thatEntity) const;
-    private:
-        sf::Vertex ray1[2]; // Heading - viewing angle
-        sf::Vertex ray2[2]; // Heading + viewing angle
-        sf::Vertex raySights[2]; // Sight representing bullet trajectory
-
-        sf::Vector2f curHeadingVector;
-
-        void updateRays(const float heading, const sf::Vector2f &position);
-        // Manually give reference to outer agent class
-        // TODO - Make this work - as of now the pointer does not work!
-        Agent &thisAgent;
-
-    };
     FieldOfVision fov;
 
     DNA dna;

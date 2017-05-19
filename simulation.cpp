@@ -116,16 +116,17 @@ std::vector<Agent> Simulation::rankSelection(std::vector<Agent> &agents)
     std::reverse(agents.begin(), agents.end());
 
     std::vector<float> rankProbVector(agents.size());
+    float totalProb = 0;
     float p = simParams::rankProbability;
     for(size_t i = 0; i < rankProbVector.size(); i++){
         rankProbVector[i] = p * std::pow( (1-p) , i);
+        totalProb += rankProbVector[i];
     }
 
     std::vector<Agent> selectedAgents;
     for(size_t i = 0; i < agents.size(); i++){
         // random value between 0 and 1
-        float randVal = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX));
-
+       float randVal = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/totalProb));
         float probSum = 0;
         unsigned selectionIndex;
         for(size_t j = 0; j < agents.size(); j++){

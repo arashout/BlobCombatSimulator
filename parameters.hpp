@@ -4,11 +4,11 @@
 #include <vector>
 
 namespace simParams {
-    const unsigned numBatches = 20;
+    const unsigned numBatches = 1;
     const unsigned batchSize = 3;
     const float maxTime = 15;
     const float gameSpeed = 1;
-    const unsigned numGenerations = 500;
+    const unsigned numGenerations = 4;
 
     const float rankProbability = .3f;
 }
@@ -48,7 +48,7 @@ namespace nnParam {
     const unsigned short rotateLeftIndex = 2;
     const unsigned short rotateRightIndex = 3;
 
-    const std::vector<unsigned> topology {numInputs, 8, 8, numOutputs};
+    const std::vector<unsigned> topology {numInputs, 2, 2, numOutputs};
 }
 
 namespace dnaParam {
