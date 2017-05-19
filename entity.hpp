@@ -15,8 +15,6 @@
 class Entity : public sf::Drawable
 {
 public:
-    // Pure virtual function to be overrided (Thus the "= 0")
-    virtual void update(const float dt,const sf::RenderWindow &window) = 0;
     // Allows us to do "window.draw(child of Entity);"
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {
         target.draw(shape);
@@ -78,10 +76,7 @@ public:
 // Protected so that child classes have access to these
 protected:
     sf::CircleShape shape;
-    sf::Vector2f velocity;
     std::string id;
-    virtual void kinematics(const float dt) = 0;
-
 };
 
 #endif // ENTITY_HPP

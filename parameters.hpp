@@ -14,10 +14,8 @@ namespace simParams {
 }
 
 namespace agentParams {
-    const float terminalSpeed = 150;
-    const float velocityDecay = .5;
-    const float thrustPower = 300;
-    const float rotatePower = 150;
+    const float thrustPower = .5;
+    const float rotatePower = 1;
     const float agentRadius = 15;
     const float shotChargeTime = 1; // Time [s] to pass before next shot
     const float eyeRadius = 3;
@@ -56,7 +54,7 @@ namespace dnaParam {
 }
 
 namespace bulletParams {
-    const float baseSpeed = 300;
+    const float baseSpeed = .7;
     const float radius = 3;
 }
 

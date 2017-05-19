@@ -9,11 +9,10 @@ class Bullet : public Entity
 public:
     Bullet(
            const sf::Vector2f p,
-           const sf::Vector2f v,
            const float heading,
            Agent &agent
     );
-    void update(const float dt,const sf::RenderWindow &window);
+    void update(const sf::RenderWindow &window);
     bool isExpired(void) const;
     void setExpiry(bool expiryValue);
     std::string getParentId(void) const;
@@ -21,8 +20,8 @@ public:
 
 private:
     static long count;
-    void kinematics(const float dt);
     bool expired = false;
+    sf::Vector2f velocity;
     // Agent that fired this bullet
     Agent &parentAgent;
 

@@ -29,8 +29,8 @@ public:
         return computeFitness() < a.computeFitness();
     }
     void mutate(void){ dna.mutate();}
-    void update(const float dt, const sf::RenderWindow &window);
-    void express(const float dt, std::unordered_map<std::string, Bullet> &bulletMap);
+    void update(const sf::RenderWindow &window);
+    void express(std::unordered_map<std::string, Bullet> &bulletMap);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     void setId(const std::string newId);
     void setPosition(const sf::Vector2f p);
@@ -57,10 +57,9 @@ private:
     bool canShoot;
 
     void setup(unsigned genNum);
-    void applyInputs(const float dt, std::unordered_map<std::string, Bullet>& bulletMap);
-    void kinematics(const float dt);
-    void thrust(const float dt, const float direction);
-    void rotate(const float dt, const float direction);
+    void applyInputs(std::unordered_map<std::string, Bullet>& bulletMap);
+    void thrust(const float direction);
+    void rotate(const float direction);
     void shoot(std::unordered_map<std::string, Bullet>& bulletMap, const bool wantsToShoot);
 
     void checkBullets(std::unordered_map<std::string, Bullet> &bulletMap);

@@ -42,8 +42,6 @@ void Agent::setup(unsigned genNum)
     // Convenienve
     shape.setOrigin(r, r);
     eye.setOrigin(agentParams::eyeRadius, agentParams::eyeRadius);
-
-    velocity = sf::Vector2f(0,0);
 }
 
 void Agent::draw(sf::RenderTarget& target, sf::RenderStates states) const{
@@ -55,8 +53,7 @@ void Agent::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     UNUSED(states);
 }
 
-void Agent::update(const float dt, const sf::RenderWindow &window){
-    kinematics(dt);
+void Agent::update(const sf::RenderWindow &window){
     fov.update(shape.getRotation(), eye.getPosition());
     // Mirror edges - Like in PACMAN
     resetPosition(outOfBounds(window, shape.getRadius()), window, shape.getRadius());
@@ -66,50 +63,55 @@ void Agent::update(const float dt, const sf::RenderWindow &window){
         shotTimer = 0;
     }
     else if(shotTimer < agentParams::shotChargeTime){
-        shotTimer += dt;
+        shotTimer += .01;
         canShoot = false;
     }
 
-    timeAlive += dt;
-}
-
-void Agent::kinematics(const float dt){
-    sf::Vector2f newPosition = shape.getPosition() + velocity*dt;
-    shape.setPosition(newPosition);
     // Calculate eye position
     sf::Vector2f heading = SFMLVector::vectorHeading(shape.getRotation());
     eye.setPosition(shape.getPosition() + heading*shape.getRadius());
+
 }
 
-void Agent::express(const float dt, std::unordered_map<std::string, Bullet>& bulletMap){
-    dna.brain.feedforward(inputVector);
-    Eigen::VectorXf outputVector = dna.brain.computePrediction();
-    shoot(bulletMap, outputVector(nnParam::shootIndex));
-    thrust(dt, outputVector(nnParam::thrustIndex) );
+void Agent::express(std::unordered_map<std::string, Bullet>& bulletMap){
+    if(id=="Player") applyInputs(bulletMap);
+    else{
+        dna.brain.feedforward(inputVector);
+        Eigen::VectorXf outputVector = dna.brain.computePrediction();
+        shoot(bulletMap, outputVector(nnParam::shootIndex));
+        thrust(outputVector(nnParam::thrustIndex) );
 
-    bool rotateRight = outputVector(nnParam::rotateRightIndex) == 1.0f;
-    bool rotateLeft = outputVector(nnParam::rotateLeftIndex == 1.0f);
-    if(rotateRight && rotateLeft){} // Attempt to remove bias of turning a certain direction
-    else if(rotateRight) rotate(dt, 1);
-    else if(rotateLeft) rotate(dt, -1);
-}
-
-void Agent::thrust(const float dt, const float direction){
-    sf::Vector2f thrustVector = SFMLVector::vectorHeading(shape.getRotation());
-    velocity += thrustVector * agentParams::thrustPower * dt * direction;
-    // Limit velocity
-    if(SFMLVector::magnitude(velocity) > agentParams::terminalSpeed){
-        velocity = SFMLVector::limit(velocity, agentParams::terminalSpeed);
+        bool rotateRight = outputVector(nnParam::rotateRightIndex) == 1.0f;
+        bool rotateLeft = outputVector(nnParam::rotateLeftIndex == 1.0f);
+        if(rotateRight && rotateLeft){} // Attempt to remove bias of turning a certain direction
+        else if(rotateRight) rotate(1);
+        else if(rotateLeft) rotate(1);
     }
 }
 
-void Agent::rotate(const float dt, const float direction){
-    shape.rotate(dt*direction*agentParams::rotatePower);
+void Agent::applyInputs(std::unordered_map<std::string, Bullet>& bulletMap){
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) thrust(1);
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) rotate(1);
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) rotate(-1);
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) shoot(bulletMap, true);
+}
+
+void Agent::thrust(const float direction){
+    sf::Vector2f thrustVector = SFMLVector::vectorHeading(shape.getRotation());
+    sf::Vector2f newPosition = shape.getPosition() + thrustVector*agentParams::thrustPower;
+    shape.setPosition(newPosition);
+
+}
+
+void Agent::rotate(const float direction){
+    shape.rotate(direction*agentParams::rotatePower);
 }
 
 void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletMap,const bool wantsToShoot){
     if(wantsToShoot && canShoot){
-        Bullet b(eye.getPosition() ,velocity, shape.getRotation(), *this);
+        Bullet b(eye.getPosition(), shape.getRotation(), *this);
         bulletMap.insert(std::make_pair(b.getId(), b));
     }
 }

@@ -2,7 +2,7 @@
 #include "sfmlvector.hpp"
 #include "parameters.hpp"
 
-Game::Game(sf::RenderWindow &window, std::unordered_map<std::__cxx11::string, Agent> &agents) :
+Game::Game(sf::RenderWindow &window, std::unordered_map<std::string, Agent> &agents) :
       mWindow(window), allAgents(agents)
 {
     float xSize = mWindow.getSize().x;
@@ -71,8 +71,8 @@ void Game::updatePhase(const float elapsedTime){
         Agent &thisAgent = kv.second;
         if(!thisAgent.hasDied()){
             thisAgent.fillInputVector(allAgents, bulletMap, mWindow);
-            thisAgent.express(elapsedTime, bulletMap);
-            thisAgent.update(elapsedTime, mWindow);
+            thisAgent.express(bulletMap);
+            thisAgent.update(mWindow);
         }
         else deadAgents.insert(thisAgent.getId());
     }
@@ -81,7 +81,7 @@ void Game::updatePhase(const float elapsedTime){
     for(auto &kv : bulletMap)
     {
         Bullet &curBullet = kv.second;
-        curBullet.update(elapsedTime, mWindow);
+        curBullet.update(mWindow);
         if(curBullet.isExpired()) bulletDeletionSet.insert(curBullet.getId());
     }
 }
