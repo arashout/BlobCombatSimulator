@@ -4,16 +4,16 @@
 #include <vector>
 
 namespace simParams {
-    const unsigned numBatches = 1;
+    const unsigned numBatches = 5;
     const unsigned batchSize = 3;
-    const unsigned numGenerations = 4;
+    const unsigned numGenerations = 50;
     const float rankProbability = .3f;
 }
 
 namespace gameParams {
     const unsigned normalFPS = 60;
-    const unsigned framesPerGame = normalFPS*100;
-    const float gameSpeed = 1;
+    const unsigned framesPerGame = normalFPS*15;
+    const float gameSpeed = 3;
 }
 
 namespace fovParams {
@@ -40,7 +40,7 @@ namespace nnParam {
     const unsigned short rotateLeftIndex = 2;
     const unsigned short rotateRightIndex = 3;
 
-    const std::vector<unsigned> topology {numInputs, 1, numOutputs};
+    const std::vector<unsigned> topology {numInputs, 8, 8, numOutputs};
 }
 
 namespace dnaParam {
@@ -51,7 +51,7 @@ namespace agentParams {
     const float thrustVelocity = 3;
     const float rotationVelocity = 5;
     const float agentRadius = 15;
-    const unsigned shotChargeFrames = gameParams::normalFPS*0.5; // Number of frames
+    const unsigned shotChargeFrames = gameParams::normalFPS*5; // Number of frames
     const float eyeRadius = 3;
     const unsigned numLives = 3;
 }

@@ -8,8 +8,8 @@ void gameTest(void){
     Agent a(0);
     a.setId("Player");
     agentMap.insert(std::make_pair(a.getId(), a));
-    Agent b(0);
-    agentMap.insert(std::make_pair(b.getId(), b));
+//    Agent b(0);
+//    agentMap.insert(std::make_pair(b.getId(), b));
     sf::RenderWindow mainWindow(sf::VideoMode(600, 600), "Blob Combat Simulator!");
     Game g(mainWindow, agentMap);
     g.run();
@@ -17,8 +17,8 @@ void gameTest(void){
 
 int main()
 {
-    //Simulation s;
-    gameTest();
+    Simulation s;
+    //gameTest();
     return 0;
 }
 

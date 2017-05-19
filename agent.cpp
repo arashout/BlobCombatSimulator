@@ -24,8 +24,8 @@ void Agent::setup(unsigned genNum)
     id = "G" + std::to_string(genNum) + "A" + std::to_string(idCount);
     idCount++; // Increment the ID for the next Agent
 
-    canShoot = true;
     isDead = false;
+    canShoot = false;
     numHits = 0;
     numHitten = 0;
     shotTimer = agentParams::shotChargeFrames;
@@ -55,11 +55,9 @@ void Agent::update(const sf::RenderWindow &window){
     // Either shot is charged or is recharging
     if(shotTimer >= agentParams::shotChargeFrames) {
         canShoot = true;
-        shotTimer = 0;
     }
     else{
         shotTimer += 1;
-        canShoot = false;
     }
 
     // Calculate new eye position
@@ -91,7 +89,6 @@ void Agent::applyInputs(std::unordered_map<std::string, Bullet>& bulletMap){
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) rotate(-1);
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) shoot(bulletMap, true);
-    drawInputVector();
 }
 
 void Agent::thrust(const float direction){
@@ -110,6 +107,8 @@ void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletMap,const bool 
     if(wantsToShoot && canShoot){
         Bullet b(eye.getPosition(), shape.getRotation(), *this);
         bulletMap.insert(std::make_pair(b.getId(), b));
+        shotTimer = 0;
+        canShoot = false;
     }
 }
 
@@ -134,7 +133,7 @@ void Agent::fillInputVector(
     checkAgents(agentMap);
     checkBullets(bulletMap);
 
-    inputVector(nnParam::shotTimerIndex) = computeNormalizedShotTimer();
+    inputVector(nnParam::shotTimerIndex) = static_cast<float>(canShoot);
 //    sf::Vector2f normalizedPosition = computeNormalizedPosition(
 //                shape.getPosition(),
 //                window.getSize().x,
@@ -142,23 +141,6 @@ void Agent::fillInputVector(
 //                );
 //    inputVector(nnParam::posXIndex) = normalizedPosition.x;
     //    inputVector(nnParam::posYIndex) = normalizedPosition.y;
-}
-
-void Agent::drawInputVector()
-{
-    curAgentPresence = inputVector(nnParam::seeAgentIndex) == nnParam::floatTrue;
-    curBulletPresence = inputVector(nnParam::seeBulletIndex) == nnParam::floatTrue;
-    curAgentSights = inputVector(nnParam::sightsIndex) == nnParam::floatTrue;
-    curCanShoot = inputVector(nnParam::shotTimerIndex) == nnParam::floatTrue;
-
-    if(curAgentPresence != prevAgentPresence) std::cout << "Agent seen" << std::endl;
-    if(curBulletPresence != prevBulletPresence) std::cout << "Bullet seen" << std::endl;
-    if(curAgentSights != prevAgentSights) std::cout << "Agent sighted" << std::endl;
-    //if(curCanShoot != prevCanShoot) std::cout << "Can shoot" << std::endl;
-    prevAgentPresence = curAgentPresence;
-    prevBulletPresence = curBulletPresence;
-    prevAgentSights = curAgentSights;
-    prevCanShoot = curCanShoot;
 }
 
 void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){
@@ -198,10 +180,6 @@ void Agent::checkAgents(const std::unordered_map<std::string, Agent> &agentMap){
     }
 }
 
-float Agent::computeNormalizedShotTimer(void) const{
-    return shotTimer/agentParams::shotChargeFrames;
-}
-
 sf::Vector2f Agent::computeNormalizedPosition(const sf::Vector2f &pos, const float xMax, const float yMax) const{
     float normX = pos.x/xMax;
     float normY = pos.y/yMax;
@@ -225,8 +203,7 @@ void Agent::incrementHits(void){
     numHits++;
 }
 
-float Agent::computeFitness(void) const{
-    float fitness = numHits*8 + !isDead*4 - numHitten*8;
-    if(fitness < 0) return 0;
+unsigned Agent::computeFitness(void) const{
+    unsigned fitness = 2*numHits - numHitten;
     return fitness;
 }

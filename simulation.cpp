@@ -144,6 +144,6 @@ std::vector<Agent> Simulation::rankSelection(std::vector<Agent> &agents)
 void Simulation::printScoreBoard(std::vector<Agent> &agents)
 {
     for(Agent &a : agents){
-        std::cout << a.getId() << " : " << std::to_string(a.computeFitness()) << std::endl;
+        std::cout << a.getId() << " : " << a.computeFitness() << std::endl;
     }
 }
