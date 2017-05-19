@@ -11,8 +11,8 @@ namespace simParams {
 }
 
 namespace gameParams {
-    const unsigned normalFrameRate = 60;
-    const float maxTime = 15;
+    const unsigned normalFPS = 60;
+    const unsigned framesPerGame = normalFPS*15;
     const float gameSpeed = 1;
 }
 
@@ -51,7 +51,7 @@ namespace agentParams {
     const float thrustVelocity = 3;
     const float rotationVelocity = 5;
     const float agentRadius = 15;
-    const unsigned shotChargeFrames = gameParams::normalFrameRate*0.5; // Number of frames
+    const unsigned shotChargeFrames = gameParams::normalFPS*0.5; // Number of frames
     const float eyeRadius = 3;
     const unsigned numLives = 3;
 }

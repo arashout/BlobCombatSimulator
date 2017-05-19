@@ -22,31 +22,27 @@ Agent::Agent(unsigned genNum, Agent parent) :
 void Agent::setup(unsigned genNum)
 {
     id = "G" + std::to_string(genNum) + "A" + std::to_string(idCount);
-    idCount++;
-    // Defaults
+    idCount++; // Increment the ID for the next Agent
+
     canShoot = true;
     isDead = false;
     numHits = 0;
     numHitten = 0;
     shotTimer = agentParams::shotChargeFrames;
 
-    // Ship shape and colour adjusted here
     const float &r = agentParams::agentRadius;
     shape = sf::CircleShape(r);
     shape.setFillColor(sf::Color::White);
+    shape.setOrigin(r, r);
 
     eye = sf::CircleShape(agentParams::eyeRadius);
     eye.setFillColor(sf::Color::Red);
-
-    // Convenienve
-    shape.setOrigin(r, r);
     eye.setOrigin(agentParams::eyeRadius, agentParams::eyeRadius);
 }
 
 void Agent::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     target.draw(fov);
     target.draw(shape);
-    // Draw eye
     target.draw(eye);
 
     UNUSED(states);
@@ -56,17 +52,17 @@ void Agent::update(const sf::RenderWindow &window){
     fov.update(shape.getRotation(), eye.getPosition());
     // Mirror edges - Like in PACMAN
     resetPosition(outOfBounds(window, shape.getRadius()), window, shape.getRadius());
-    // Recharge shot
+    // Either shot is charged or is recharging
     if(shotTimer >= agentParams::shotChargeFrames) {
         canShoot = true;
         shotTimer = 0;
     }
-    else if(shotTimer < agentParams::shotChargeFrames){
+    else{
         shotTimer += 1;
         canShoot = false;
     }
 
-    // Calculate eye position
+    // Calculate new eye position
     sf::Vector2f heading = SFMLVector::vectorHeading(shape.getRotation());
     eye.setPosition(shape.getPosition() + heading*shape.getRadius());
 
@@ -144,7 +140,12 @@ void Agent::fillInputVector(
 //                window.getSize().y
 //                );
 //    inputVector(nnParam::posXIndex) = normalizedPosition.x;
-//    inputVector(nnParam::posYIndex) = normalizedPosition.y;
+    //    inputVector(nnParam::posYIndex) = normalizedPosition.y;
+}
+
+void Agent::drawInputVector(sf::RenderWindow window)
+{
+
 }
 
 void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){

@@ -33,18 +33,13 @@ Game::Game(sf::RenderWindow &window, std::unordered_map<std::string, Agent> &age
 void Game::run(void){
 
     // For handling time
-    sf::Clock clock;
-    sf::Time time;
-    float totalElapsedTime = 0;
-    mWindow.setFramerateLimit(gameParams::normalFrameRate * gameParams::gameSpeed);
+    unsigned totalFrames = 0;
+    mWindow.setFramerateLimit(gameParams::normalFPS * gameParams::gameSpeed);
 
     // run the program as long as the window is open
     while (mWindow.isOpen())
     {
-        time = clock.getElapsedTime();
-        std::cout << 1.0f/time.asSeconds()<< std::endl;
-        clock.restart();
-
+        totalFrames++;
         handleEvents();
 
         // clear the window with black color
@@ -54,17 +49,14 @@ void Game::run(void){
         deletionPhase();
         drawPhase();
 
-
         // end the current frame
         mWindow.display();
 
         // Last agent remaining marks end of game
         if(deadAgents.size() >= (allAgents.size() - 1)) break;
         // If time limit reached
-        if(totalElapsedTime > gameParams::maxTime) break;
-
+        if(totalFrames > gameParams::framesPerGame) break;
     }
-
 }
 void Game::updatePhase(){
     // Agent Updates

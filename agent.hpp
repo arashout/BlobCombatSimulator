@@ -31,20 +31,20 @@ public:
     void update(const sf::RenderWindow &window);
     void express(std::unordered_map<std::string, Bullet> &bulletMap);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-    void setId(const std::string newId);
-    void setPosition(const sf::Vector2f p);
-    void setRotation(const float heading);
     bool canSeeEntity(const Entity &thatEntity) const;
-    static void resetIdCount(void);
-    bool hasDied(void) const;
-    void incrementKillCount(void);
     float computeFitness(void) const;
     void fillInputVector(
             const std::unordered_map<std::string, Agent> &agentMap,
             std::unordered_map<std::string, Bullet> &bulletMap,
             const sf::RenderWindow &window
             );
+    void drawInputVector(sf::RenderWindow &window);
     void incrementHits();
+    //Getters and Setters
+    bool hasDied(void) const;
+    void setPosition(const sf::Vector2f p);
+    void setRotation(const float heading);
+    void setId(const std::string newId);
 private:
     static long idCount;
     bool isDead;
