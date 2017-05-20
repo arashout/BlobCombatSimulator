@@ -22,7 +22,8 @@ INCLUDEPATH += "/home/arash/SFML/include"
 DEPENDPATH += "/home/arash/SFML/include"
 
 DISTFILES += \
-    BlobCombatSimulator.pro.user
+    BlobCombatSimulator.pro.user \
+    arial.ttf
 
 HEADERS += \
     bullet.hpp \

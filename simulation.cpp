@@ -9,8 +9,9 @@
 Simulation::Simulation() {
     // Set random seed
     std::srand((unsigned int) time(0));
+    simSpeed = 1;
 
-    sf::RenderWindow mainWindow(sf::VideoMode(600, 600), "Blob Combat Simulator!");
+    sf::RenderWindow mainWindow(sf::VideoMode(gameParams::windowWidth, gameParams::windowHeight), "Blob Combat Simulator!");
     // Initialize generation 0 population
     std::vector<Agent> currentPopulation = initializePopulation(0);
     for(size_t i = 1; i <= simParams::numGenerations; i++){
@@ -54,7 +55,7 @@ std::vector<Agent> Simulation::singleRound(sf::RenderWindow &window, std::vector
 void Simulation::singleGame(std::unordered_map<std::string, Agent> &batchAgents,
                             sf::RenderWindow &window){
     Game game(window, batchAgents);
-    game.run();
+    game.run(simSpeed);
 }
 
 std::vector<Agent> Simulation::initializePopulation(unsigned genNum){

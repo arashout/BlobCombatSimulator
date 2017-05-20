@@ -11,7 +11,7 @@ class Game
 {
 public:
     Game(sf::RenderWindow &window,std::unordered_map<std::string, Agent> &agents);
-    void run(void);
+    void run(int &simSpeed);
 private:
     sf::RenderWindow &mWindow;
     std::unordered_map<std::string, Bullet> bulletMap;
@@ -19,7 +19,7 @@ private:
     std::unordered_map<std::string, Agent> &allAgents;
     std::unordered_set<std::string> deadAgents;
 
-    void handleEvents(void);
+    void handleEvents(int &simSpeed);
     void updatePhase();
     void drawPhase(void);
     void deletionPhase(void);

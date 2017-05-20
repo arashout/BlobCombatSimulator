@@ -8,17 +8,22 @@ void gameTest(void){
     Agent a(0);
     a.setId("Player");
     agentMap.insert(std::make_pair(a.getId(), a));
-//    Agent b(0);
-//    agentMap.insert(std::make_pair(b.getId(), b));
+    Agent b(0);
+    agentMap.insert(std::make_pair(b.getId(), b));
     sf::RenderWindow mainWindow(sf::VideoMode(600, 600), "Blob Combat Simulator!");
+    int gameSpeed = 1;
     Game g(mainWindow, agentMap);
-    g.run();
+    g.run(gameSpeed);
 }
 
 int main()
 {
-    Simulation s;
-    //gameTest();
+    // Declare and load a font
+    sf::Font font;
+    font.loadFromFile("/home/arash/Documents/BlobCombatSimulator/arial.ttf");
+
+    //Simulation s;
+    gameTest();
     return 0;
 }
 

@@ -20,6 +20,7 @@ private:
 
     void printScoreBoard(std::vector<Agent> &agents);
     void printDetails(std::vector<Agent> &agents);
+    int simSpeed;
 };
 
 #endif // SIMULATION_HPP

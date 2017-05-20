@@ -2,6 +2,7 @@
 #include "sfmlvector.hpp"
 #include "parameters.hpp"
 
+#include <iostream>
 Game::Game(sf::RenderWindow &window, std::unordered_map<std::string, Agent> &agents) :
       mWindow(window), allAgents(agents)
 {
@@ -30,17 +31,23 @@ Game::Game(sf::RenderWindow &window, std::unordered_map<std::string, Agent> &age
         counter++;
     }
 }
-void Game::run(void){
+void Game::run(int &simSpeed){
 
     // For handling time
     unsigned totalFrames = 0;
-    mWindow.setFramerateLimit(gameParams::normalFPS * gameParams::gameSpeed);
+    mWindow.setFramerateLimit(gameParams::normalFPS * simSpeed);
+    mWindow.setKeyRepeatEnabled(false);
+
+    sf::Clock clock;
+    sf::Time time;
 
     // run the program as long as the window is open
     while (mWindow.isOpen())
     {
+        time = clock.getElapsedTime();
+        clock.restart().asSeconds();
         totalFrames++;
-        handleEvents();
+        handleEvents(simSpeed);
 
         // clear the window with black color
         mWindow.clear(sf::Color::Black);
@@ -96,13 +103,19 @@ void Game::drawPhase(void){
     }
 }
 
-void Game::handleEvents(void){
+void Game::handleEvents(int &simSpeed){
     sf::Event event;
     // check all the window's events that were triggered since the last iteration of the loop
-    while (mWindow.pollEvent(event))
+    if (mWindow.pollEvent(event))
     {
         // "close requested" event: we close the window
-        if (event.type == sf::Event::Closed)
-            mWindow.close();
+        if (event.type == sf::Event::Closed) mWindow.close();
+        if (event.type == sf::Event::MouseButtonPressed){
+            if(event.mouseButton.button == sf::Mouse::Left) simSpeed++;
+            else if(event.mouseButton.button == sf::Mouse::Right) simSpeed--;
+
+            if(simSpeed < 1) simSpeed = 1;
+            mWindow.setFramerateLimit(gameParams::normalFPS * simSpeed);
+        }
     }
 }

@@ -134,13 +134,13 @@ void Agent::fillInputVector(
     checkBullets(bulletMap);
 
     inputVector(nnParam::shotTimerIndex) = static_cast<float>(canShoot);
-//    sf::Vector2f normalizedPosition = computeNormalizedPosition(
-//                shape.getPosition(),
-//                window.getSize().x,
-//                window.getSize().y
-//                );
-//    inputVector(nnParam::posXIndex) = normalizedPosition.x;
-    //    inputVector(nnParam::posYIndex) = normalizedPosition.y;
+    sf::Vector2f normalizedPosition = computeNormalizedPosition(
+                shape.getPosition(),
+                window.getSize().x,
+                window.getSize().y
+                );
+    inputVector(nnParam::posXIndex) = normalizedPosition.x;
+    inputVector(nnParam::posYIndex) = normalizedPosition.y;
 }
 
 void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){
