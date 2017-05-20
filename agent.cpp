@@ -44,6 +44,7 @@ void Agent::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     target.draw(fov);
     target.draw(shape);
     target.draw(eye);
+    target.draw(statusInd);
 
     UNUSED(states);
 }
@@ -67,6 +68,7 @@ void Agent::update(const sf::RenderWindow &window){
     sf::Vector2f heading = SFMLVector::vectorHeading(shape.getRotation());
     eye.setPosition(shape.getPosition() + heading*shape.getRadius());
 
+    statusInd.update(shape.getPosition(), inputVector);
 }
 
 void Agent::express(std::unordered_map<std::string, Bullet>& bulletMap){
@@ -123,14 +125,6 @@ void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletMap,const bool 
     }
 }
 
-bool Agent::canSeeEntity(const Entity &thatEntity) const{
-    return fov.canSeeEntity(*this, thatEntity);
-}
-
-bool Agent::hasAgentInSights(const Agent &thatAgent) const{
-    return fov.hasAgentInSights(thatAgent);
-}
-
 void Agent::fillInputVector(
         const std::unordered_map<std::string, Agent>& agentMap,
         std::unordered_map<std::string, Bullet>& bulletMap,
@@ -149,6 +143,8 @@ void Agent::fillInputVector(
     inputVector(nnParam::posXIndex) = normalizedPosition.x;
     inputVector(nnParam::posYIndex) = normalizedPosition.y;
 
+    inputVector(nnParam::staminaIndex) = computeNormalizedStamina();
+
     changeColor();
 }
 void Agent::changeColor(void){
@@ -156,15 +152,6 @@ void Agent::changeColor(void){
     if(inputVector(nnParam::seeBulletIndex) == nnParam::floatTrue) shape.setFillColor(sf::Color::Blue);
     if(inputVector(nnParam::seeAgentIndex) == nnParam::floatTrue) shape.setFillColor(sf::Color::Green);
     if(inputVector(nnParam::sightsIndex) == nnParam::floatTrue) shape.setFillColor(sf::Color::Red);
-
-}
-
-void Agent::setupStatusBar()
-{
-}
-
-void Agent::updateStatusBar()
-{
 
 }
 
@@ -200,6 +187,14 @@ void Agent::checkAgents(const std::unordered_map<std::string, Agent> &agentMap){
             if(canSeeEntity(thatAgent)) inputVector(nnParam::seeAgentIndex) = nnParam::floatTrue;
         }
     }
+}
+
+bool Agent::canSeeEntity(const Entity &thatEntity) const{
+    return fov.canSeeEntity(*this, thatEntity);
+}
+
+bool Agent::hasAgentInSights(const Agent &thatAgent) const{
+    return fov.hasAgentInSights(thatAgent);
 }
 
 sf::Vector2f Agent::computeNormalizedPosition(const sf::Vector2f &pos, const float xMax, const float yMax) const{

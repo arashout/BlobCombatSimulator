@@ -50,7 +50,7 @@ private:
     static long idCount;
     bool isDead;
     bool canShoot;
-    float numHits;
+    int numHits;
     int health;
     float stamina;
 
@@ -78,9 +78,6 @@ private:
     DNA dna;
     Eigen::VectorXf inputVector;
     void changeColor();
-
-    void setupStatusBar(void);
-    void updateStatusBar(void);
 };
 
 #endif // AGENT_HPP

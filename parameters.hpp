@@ -27,13 +27,14 @@ namespace nnParam {
     const float floatTrue = 1.0f;
     const float floatFalse = 0.0f;
 
-    const unsigned numInputs = 6;
+    const unsigned numInputs = 7;
     const unsigned short sightsIndex = 0;
     const unsigned short seeAgentIndex = 1;
     const unsigned short seeBulletIndex = 2;
     const unsigned short shotTimerIndex = 3;
     const unsigned short posXIndex = 4;
     const unsigned short posYIndex = 5;
+    const unsigned short staminaIndex = 6;
 
     const unsigned numOutputs = 4;
     const unsigned short shootIndex = 0;
@@ -41,11 +42,11 @@ namespace nnParam {
     const unsigned short rotateLeftIndex = 2;
     const unsigned short rotateRightIndex = 3;
 
-    const std::vector<unsigned> topology {numInputs, 6, 8, 4, numOutputs};
+    const std::vector<unsigned> topology {numInputs, 10, 8, 4, numOutputs};
 }
 
 namespace dnaParam {
-    const float mutationChance = 0.1f;
+    const float mutationChance = 0.25f;
 }
 
 namespace agentParams {
@@ -58,7 +59,7 @@ namespace agentParams {
     const int healthMax = 3;
 
     const float staminaMax = 100.0f;
-    const float staminaRegen = .5f;
+    const float staminaRegen = .3f;
 }
 
 namespace bulletParams {
@@ -68,5 +69,6 @@ namespace bulletParams {
 
 namespace statusBars {
     const unsigned width = 5;
+    const float margin = 5;
 }
 #endif // PARAMETERS_HPP
