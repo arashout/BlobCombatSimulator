@@ -152,10 +152,7 @@ void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){
         if(id != b.getParentId()){
             if(canSeeEntity(b)) inputVector(nnParam::seeBulletIndex) = nnParam::seeBulletIndex;
 
-            bool isBulletCollision = SFMLVector::circToCircCollision(
-                        b.getShape(),
-                        shape
-                        );
+            bool isBulletCollision = SFMLVector::circToCircCollision(b.getShape(),shape);
             if(isBulletCollision){
                 numHitten++;
                 if(numHitten > agentParams::numLives) isDead = true;

@@ -5,7 +5,7 @@
 
 namespace simParams {
     const unsigned numBatches = 10;
-    const unsigned batchSize = 2;
+    const unsigned batchSize = 3;
     const unsigned numGenerations = 100;
     const float rankProbability = .3f;
 }

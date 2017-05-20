@@ -39,25 +39,23 @@ public:
         else if(topMost > window.getSize().y) return EDGE::BOTTOM;
         else return EDGE::INSIDE;
     }
-    virtual void resetPosition(const EDGE edge,
-                               const sf::RenderWindow& window,
-                               const float characterLength)
+    virtual void resetPosition(const EDGE edge, const sf::RenderWindow& window, const float r)
     {
         sf::Vector2f position = shape.getPosition();
         // Switch statement that resets the entity position based on which "edge"
         // it has exited from
         switch(edge){
         case EDGE::TOP:
-            shape.setPosition(position.x,  window.getSize().y + characterLength);
+            shape.setPosition(position.x,  window.getSize().y + r);
             break;
         case EDGE::BOTTOM:
-            shape.setPosition(position.x, -characterLength);
+            shape.setPosition(position.x, -r);
             break;
         case EDGE::LEFT:
-            shape.setPosition(window.getSize().x + characterLength, position.y);
+            shape.setPosition(window.getSize().x + r, position.y);
             break;
         case EDGE::RIGHT:
-            shape.setPosition(-characterLength, position.y);
+            shape.setPosition(-r, position.y);
             break;
         default:
             // Do Nothing

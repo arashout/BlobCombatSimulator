@@ -71,17 +71,6 @@ private:
 
     DNA dna;
     Eigen::VectorXf inputVector;
-
-    // Debugging for input vector
-    bool curAgentPresence;
-    bool curBulletPresence;
-    bool curAgentSights;
-    bool curCanShoot;
-
-    bool prevAgentPresence;
-    bool prevBulletPresence;
-    bool prevAgentSights;
-    bool prevCanShoot;
 };
 
 #endif // AGENT_HPP
