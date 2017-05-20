@@ -41,7 +41,7 @@ namespace nnParam {
     const unsigned short rotateLeftIndex = 2;
     const unsigned short rotateRightIndex = 3;
 
-    const std::vector<unsigned> topology {numInputs, 6, 6, numOutputs};
+    const std::vector<unsigned> topology {numInputs, 6, 8, 4, numOutputs};
 }
 
 namespace dnaParam {
@@ -58,7 +58,7 @@ namespace agentParams {
 }
 
 namespace bulletParams {
-    const float baseSpeed = 400/gameParams::normalFPS;
+    const float baseSpeed = 450/gameParams::normalFPS;
     const float radius = 3;
 }
 
