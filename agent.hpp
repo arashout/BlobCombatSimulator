@@ -60,9 +60,9 @@ private:
 
     void setup(unsigned genNum);
     void applyInputs(std::unordered_map<std::string, Bullet>& bulletMap);
-    void thrust(const float direction);
-    void rotate(const float direction);
-    void shoot(std::unordered_map<std::string, Bullet>& bulletMap, const bool wantsToShoot);
+    void thrust(void);
+    void rotate(const short direction);
+    void shoot(std::unordered_map<std::string, Bullet>& bulletMap);
 
     void checkBullets(std::unordered_map<std::string, Bullet> &bulletMap);
     void checkAgents(const std::unordered_map<std::string, Agent> &agentMap);

@@ -53,7 +53,6 @@ void Agent::update(const sf::RenderWindow &window){
     fov.update(shape.getRotation(), eye.getPosition());
 
     bool isOutOfBounds = EDGE::INSIDE != anyOutOfBounds(window, shape.getRadius());
-    //mirrorEdges(isOutOfBounds, window, shape.getRadius());
     if(isOutOfBounds) shape.setPosition(lastPosition);
     // Either shot is charged or is recharging
     if(shotTimer >= agentParams::shotChargeFrames) {
@@ -77,11 +76,13 @@ void Agent::express(std::unordered_map<std::string, Bullet>& bulletMap){
     else{
         dna.brain.feedforward(inputVector);
         Eigen::VectorXf outputVector = dna.brain.computePrediction();
-        shoot(bulletMap, outputVector(nnParam::shootIndex));
-        thrust(outputVector(nnParam::thrustIndex) );
-
+        bool thrustForward = outputVector(nnParam::thrustIndex) == nnParam::floatTrue;
         bool rotateRight = outputVector(nnParam::rotateRightIndex) == nnParam::floatTrue;
         bool rotateLeft = outputVector(nnParam::rotateLeftIndex) == nnParam::floatTrue;
+        bool wantsToShoot = outputVector(nnParam::shootIndex) == nnParam::floatTrue;
+
+        if(wantsToShoot) shoot(bulletMap);
+        if(thrustForward) thrust();
         if(rotateRight && rotateLeft){} // Attempt to remove bias of turning a certain direction
         else if(rotateRight) rotate(1);
         else if(rotateLeft) rotate(-1);
@@ -89,18 +90,18 @@ void Agent::express(std::unordered_map<std::string, Bullet>& bulletMap){
 }
 
 void Agent::applyInputs(std::unordered_map<std::string, Bullet>& bulletMap){
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) thrust(1);
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) thrust();
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) rotate(1);
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) rotate(-1);
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) shoot(bulletMap, true);
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) shoot(bulletMap);
 }
 
-void Agent::thrust(const float direction){
+void Agent::thrust(void){
     if(stamina > 0){
         sf::Vector2f thrustVector = SFMLVector::vectorHeading(shape.getRotation());
-        sf::Vector2f addedVelocity = thrustVector*agentParams::thrustVelocity*direction;
+        sf::Vector2f addedVelocity = thrustVector*agentParams::thrustVelocity;
         sf::Vector2f newPosition = shape.getPosition() + addedVelocity;
         shape.setPosition(newPosition);
         stamina--;
@@ -108,7 +109,7 @@ void Agent::thrust(const float direction){
 
 }
 
-void Agent::rotate(const float direction){
+void Agent::rotate(const short direction){
     if(stamina > 0){
         shape.rotate(direction*agentParams::rotationVelocity);
         stamina--;
@@ -116,8 +117,8 @@ void Agent::rotate(const float direction){
 
 }
 
-void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletMap,const bool wantsToShoot){
-    if(wantsToShoot && canShoot){
+void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletMap){
+    if(canShoot){
         Bullet b(eye.getPosition(), shape.getRotation(), *this);
         bulletMap.insert(std::make_pair(b.getId(), b));
         shotTimer = 0;
@@ -144,8 +145,6 @@ void Agent::fillInputVector(
     inputVector(nnParam::posYIndex) = normalizedPosition.y;
 
     inputVector(nnParam::staminaIndex) = computeNormalizedStamina();
-
-    changeColor();
 }
 
 void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){

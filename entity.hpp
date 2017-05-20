@@ -51,29 +51,6 @@ public:
         else if(bottomMost > window.getSize().y) return EDGE::BOTTOM;
         else return EDGE::INSIDE;
     }
-    virtual void mirrorEdges(const EDGE edge, const sf::RenderWindow& window, const float r)
-    {
-        sf::Vector2f position = shape.getPosition();
-        // Switch statement that resets the entity position based on which "edge"
-        // it has exited from
-        switch(edge){
-        case EDGE::TOP:
-            shape.setPosition(position.x,  window.getSize().y + r);
-            break;
-        case EDGE::BOTTOM:
-            shape.setPosition(position.x, -r);
-            break;
-        case EDGE::LEFT:
-            shape.setPosition(window.getSize().x + r, position.y);
-            break;
-        case EDGE::RIGHT:
-            shape.setPosition(-r, position.y);
-            break;
-        default:
-            // Do Nothing
-            break;
-        }
-    }
     virtual sf::CircleShape getShape(void) const {return shape;}
     virtual sf::Vector2f getPosition(void) const {return shape.getPosition();}
     virtual bool operator == (const Entity &e) const {
