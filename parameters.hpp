@@ -54,7 +54,11 @@ namespace agentParams {
     const float agentRadius = 15;
     const unsigned shotChargeFrames = gameParams::normalFPS*1; // Number of frames
     const float eyeRadius = 3;
-    const int maxHealth = 3;
+
+    const int healthMax = 3;
+
+    const float staminaMax = 100.0f;
+    const float staminaRegen = .5f;
 }
 
 namespace bulletParams {
@@ -62,4 +66,7 @@ namespace bulletParams {
     const float radius = 3;
 }
 
+namespace statusBars {
+    const unsigned width = 5;
+}
 #endif // PARAMETERS_HPP

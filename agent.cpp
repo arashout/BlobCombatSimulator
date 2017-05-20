@@ -27,13 +27,13 @@ void Agent::setup(unsigned genNum)
     isDead = false;
     canShoot = false;
     numHits = 0;
-    health = agentParams::maxHealth;
+    health = agentParams::healthMax;
+    stamina = agentParams::staminaMax;
     shotTimer = agentParams::shotChargeFrames;
 
-    const float &r = agentParams::agentRadius;
-    shape = sf::CircleShape(r);
+    shape = sf::CircleShape(agentParams::agentRadius);
     shape.setFillColor(sf::Color::White);
-    shape.setOrigin(r, r);
+    shape.setOrigin(agentParams::agentRadius, agentParams::agentRadius);
 
     eye = sf::CircleShape(agentParams::eyeRadius);
     eye.setFillColor(sf::Color::Red);
@@ -61,7 +61,8 @@ void Agent::update(const sf::RenderWindow &window){
     else{
         shotTimer += 1;
     }
-
+    // Stamina regen
+    if(stamina < agentParams::staminaMax) stamina += agentParams::staminaRegen;
     // Calculate new eye position
     sf::Vector2f heading = SFMLVector::vectorHeading(shape.getRotation());
     eye.setPosition(shape.getPosition() + heading*shape.getRadius());
@@ -95,15 +96,22 @@ void Agent::applyInputs(std::unordered_map<std::string, Bullet>& bulletMap){
 }
 
 void Agent::thrust(const float direction){
-    sf::Vector2f thrustVector = SFMLVector::vectorHeading(shape.getRotation());
-    sf::Vector2f addedVelocity = thrustVector*agentParams::thrustVelocity*direction;
-    sf::Vector2f newPosition = shape.getPosition() + addedVelocity;
-    shape.setPosition(newPosition);
+    if(stamina > 0){
+        sf::Vector2f thrustVector = SFMLVector::vectorHeading(shape.getRotation());
+        sf::Vector2f addedVelocity = thrustVector*agentParams::thrustVelocity*direction;
+        sf::Vector2f newPosition = shape.getPosition() + addedVelocity;
+        shape.setPosition(newPosition);
+        stamina--;
+    }
 
 }
 
 void Agent::rotate(const float direction){
-    shape.rotate(direction*agentParams::rotationVelocity);
+    if(stamina > 0){
+        shape.rotate(direction*agentParams::rotationVelocity);
+        stamina--;
+    }
+
 }
 
 void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletMap,const bool wantsToShoot){
@@ -151,6 +159,15 @@ void Agent::changeColor(void){
 
 }
 
+void Agent::setupStatusBar()
+{
+}
+
+void Agent::updateStatusBar()
+{
+
+}
+
 void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){
     // Bullet Field of vision checks and collision
     inputVector(nnParam::seeBulletIndex) = nnParam::floatFalse;
@@ -190,6 +207,11 @@ sf::Vector2f Agent::computeNormalizedPosition(const sf::Vector2f &pos, const flo
     float normY = pos.y/yMax;
     return sf::Vector2f(normX, normY);
 }
+
+float Agent::computeNormalizedStamina(void) const{
+    return stamina/agentParams::staminaMax;
+}
+
 // Getters and setters
 void Agent::setId(const std::string newId){
     id = newId;

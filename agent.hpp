@@ -8,6 +8,7 @@
 #include <Eigen/Core>
 #include <dna.hpp>
 #include "fieldofvision.hpp"
+#include "statusindicator.hpp"
 
 class Agent : public Entity
 {
@@ -18,9 +19,10 @@ public:
         // Copy the important stuff!
         dna = a.dna;
         fov = a.fov;
+        id = a.id;
         isDead = a.isDead;
         numHits = a.numHits;
-        numHitten = a.numHitten;
+        health = a.health;
         return *this;
     }
 
@@ -50,6 +52,7 @@ private:
     bool canShoot;
     float numHits;
     int health;
+    float stamina;
 
     unsigned shotTimer;
 
@@ -65,15 +68,19 @@ private:
     void checkAgents(const std::unordered_map<std::string, Agent> &agentMap);
     bool hasAgentInSights(const Agent &thatAgent) const;
 
-    float computeNormalizedShotTimer(void) const;
+    float computeNormalizedStamina(void) const;
     sf::Vector2f computeNormalizedPosition(const sf::Vector2f &pos, const float xMax, const float yMax) const;
 
     sf::CircleShape eye;
     FieldOfVision fov;
+    StatusIndicator statusInd;
 
     DNA dna;
     Eigen::VectorXf inputVector;
     void changeColor();
+
+    void setupStatusBar(void);
+    void updateStatusBar(void);
 };
 
 #endif // AGENT_HPP
