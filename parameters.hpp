@@ -19,9 +19,9 @@ namespace gameParams {
 }
 
 namespace fovParams {
-    const float viewingAngle = 30;
-    const float sightDistance = 500;
-    const float viewingDistance = 400;
+    const float viewingAngle = 60;
+    const float sightDistance = 150;
+    const float viewingDistance = 300;
 }
 
 namespace nnParam {
@@ -43,7 +43,7 @@ namespace nnParam {
     const unsigned short rotateLeftIndex = 2;
     const unsigned short rotateRightIndex = 3;
 
-    const std::vector<unsigned> topology {numInputs, 10, 8, 4, numOutputs};
+    const std::vector<unsigned> topology {numInputs, 10, 10, numOutputs};
 }
 
 namespace dnaParam {
@@ -54,11 +54,14 @@ namespace agentParams {
     const float thrustVelocity = 150/gameParams::normalFPS;
     const float rotationVelocity = 100/gameParams::normalFPS;
     const float agentRadius = 15;
-    const unsigned shotChargeFrames = gameParams::normalFPS*1; // Number of frames
+    const unsigned shotChargeFrames = gameParams::normalFPS*.1; // Number of frames
     const float eyeRadius = 3;
 
     const int healthMax = 3;
 
+    const float rotationCost = .5f;
+    const float thrustCost = 2;
+    const float shootCost = 3;
     const float staminaMax = 100.0f;
     const float staminaRegen = .3f;
 }

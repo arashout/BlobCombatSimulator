@@ -90,7 +90,7 @@ std::vector<Agent> Simulation::propSelection(std::vector<Agent> &agents){
     float totalFitness = 0;
     for(size_t i = 0; i < agents.size(); i++){
         Agent &a = agents[i];
-        totalFitness += a.computeFitness();
+        totalFitness += a.getHealth();
     }
 
     std::vector<Agent> selectedAgents;
@@ -101,7 +101,7 @@ std::vector<Agent> Simulation::propSelection(std::vector<Agent> &agents){
         float selectionSum = 0;
         unsigned selectionIndex;
         for(size_t j = 0; j < agents.size(); j++){
-            selectionSum += agents[j].computeFitness();
+            selectionSum += agents[j].getHealth();
             if(selectionSum > randVal){
                 selectionIndex = j;
                 break;
@@ -146,6 +146,6 @@ std::vector<Agent> Simulation::rankSelection(std::vector<Agent> &agents)
 void Simulation::printScoreBoard(std::vector<Agent> &agents)
 {
     for(Agent &a : agents){
-        std::cout << a.getId() << " : " << a.computeFitness() << std::endl;
+        std::cout << a.getId() << " : " << a.getHealth() << std::endl;
     }
 }

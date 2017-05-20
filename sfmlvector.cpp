@@ -1,4 +1,7 @@
 #include "sfmlvector.hpp"
+//TODO - convert magnitude to magnitudeSquared where possible
+
+
 /**
  * @brief Convert float direction to normalized vector
  * in the same direction
@@ -82,10 +85,11 @@ bool SFMLVector::lineCircleCollision(const sf::Vector2f line[], const sf::Circle
 
     sf::Vector2f ab = b-a;
     sf::Vector2f ac = c-a;
-    // If vectors facing wrong direction
-    if(dot(ab, ac) < 0) return false;
 
-    sf::Vector2f ad = dot(ab, ac)/dot(ab, ab) * ab;
+    if(dot(ab, ac) < 0) return false; // If vectors facing wrong direction
+
+    sf::Vector2f ad = dot(ab, ac)/dot(ab, ab) * ab; 
+    if(magnitude(ab) <= magnitude(ad)) return false; // If circ is too far away
     sf::Vector2f d = ad + a;
 
     float lineCircleDistance = magnitude(d - c);

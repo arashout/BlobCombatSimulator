@@ -38,5 +38,5 @@ std::string Bullet::getParentId(void) const{
     return parentAgent.getId();
 }
 void Bullet::incrementHits(void){
-    parentAgent.incrementHits();
+    parentAgent.incrementHealth();
 }

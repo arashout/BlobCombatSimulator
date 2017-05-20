@@ -26,7 +26,6 @@ void Agent::setup(unsigned genNum)
 
     isDead = false;
     canShoot = false;
-    numHits = 0;
     health = agentParams::healthMax;
     stamina = agentParams::staminaMax;
     shotTimer = agentParams::shotChargeFrames;
@@ -99,30 +98,31 @@ void Agent::applyInputs(std::unordered_map<std::string, Bullet>& bulletMap){
 }
 
 void Agent::thrust(void){
-    if(stamina > 0){
+    if(passStaminaCheck(agentParams::thrustCost)){
         sf::Vector2f thrustVector = SFMLVector::vectorHeading(shape.getRotation());
         sf::Vector2f addedVelocity = thrustVector*agentParams::thrustVelocity;
         sf::Vector2f newPosition = shape.getPosition() + addedVelocity;
         shape.setPosition(newPosition);
-        stamina--;
+        stamina -= agentParams::thrustCost;
     }
 
 }
 
 void Agent::rotate(const short direction){
-    if(stamina > 0){
+    if(passStaminaCheck(agentParams::rotationCost)){
         shape.rotate(direction*agentParams::rotationVelocity);
-        stamina--;
+        stamina -= agentParams::rotationCost;
     }
 
 }
 
 void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletMap){
-    if(canShoot){
+    if(canShoot && passStaminaCheck(agentParams::shootCost)){
         Bullet b(eye.getPosition(), shape.getRotation(), *this);
         bulletMap.insert(std::make_pair(b.getId(), b));
         shotTimer = 0;
         canShoot = false;
+        stamina -= agentParams::shootCost;
     }
 }
 
@@ -181,6 +181,11 @@ void Agent::checkAgents(const std::unordered_map<std::string, Agent> &agentMap){
     }
 }
 
+// Helper methods
+bool Agent::passStaminaCheck(const float cost){
+    return stamina > cost;
+}
+
 bool Agent::canSeeEntity(const Entity &thatEntity) const{
     return fov.canSeeEntity(*this, thatEntity);
 }
@@ -217,11 +222,10 @@ bool Agent::hasDied() const
     return isDead;
 }
 
-void Agent::incrementHits(void){
-    numHits++;
+void Agent::incrementHealth(void){
+    health++;
 }
 
-float Agent::computeFitness(void) const{
-    float fitness = 2*numHits + health;
-    return fitness;
+int Agent::getHealth(void) const{
+    return health;
 }

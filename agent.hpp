@@ -21,31 +21,31 @@ public:
         fov = a.fov;
         id = a.id;
         isDead = a.isDead;
-        numHits = a.numHits;
         health = a.health;
         return *this;
     }
 
     bool operator<(const Agent &a) const{
-        return computeFitness() < a.computeFitness();
+        return getHealth() < a.getHealth();
     }
     void mutate(void){ dna.mutate();}
     void update(const sf::RenderWindow &window);
     void express(std::unordered_map<std::string, Bullet> &bulletMap);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     bool canSeeEntity(const Entity &thatEntity) const;
-    float computeFitness(void) const;
+
     void fillInputVector(
             const std::unordered_map<std::string, Agent> &agentMap,
             std::unordered_map<std::string, Bullet> &bulletMap,
             const sf::RenderWindow &window
             );
-    void incrementHits();
+    void incrementHealth();
     //Getters and Setters
     bool hasDied(void) const;
     void setPosition(const sf::Vector2f p);
     void setRotation(const float heading);
     void setId(const std::string newId);
+    int getHealth(void) const;
 private:
     static long idCount;
     bool isDead;
@@ -54,9 +54,16 @@ private:
     int health;
     float stamina;
 
+    sf::CircleShape eye;
+    FieldOfVision fov;
+    StatusIndicator statusInd;
+
+    DNA dna;
+    Eigen::VectorXf inputVector;
+
     unsigned shotTimer;
 
-    sf::Vector2f lastPosition; // Use this for checking if out of bounds
+    sf::Vector2f lastPosition; // Use this for reverting position
 
     void setup(unsigned genNum);
     void applyInputs(std::unordered_map<std::string, Bullet>& bulletMap);
@@ -68,15 +75,10 @@ private:
     void checkAgents(const std::unordered_map<std::string, Agent> &agentMap);
     bool hasAgentInSights(const Agent &thatAgent) const;
 
+    // Helpers
     float computeNormalizedStamina(void) const;
     sf::Vector2f computeNormalizedPosition(const sf::Vector2f &pos, const float xMax, const float yMax) const;
-
-    sf::CircleShape eye;
-    FieldOfVision fov;
-    StatusIndicator statusInd;
-
-    DNA dna;
-    Eigen::VectorXf inputVector;
+    bool passStaminaCheck(const float cost);
 };
 
 #endif // AGENT_HPP
