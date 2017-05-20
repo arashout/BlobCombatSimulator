@@ -134,7 +134,7 @@ void Agent::fillInputVector(
     checkAgents(agentMap);
     checkBullets(bulletMap);
 
-    inputVector(nnParam::shotTimerIndex) = static_cast<float>(canShoot);
+    inputVector(nnParam::canShootIndex) = static_cast<float>(canShoot);
     sf::Vector2f normalizedPosition = computeNormalizedPosition(
                 shape.getPosition(),
                 window.getSize().x,
@@ -146,13 +146,6 @@ void Agent::fillInputVector(
     inputVector(nnParam::staminaIndex) = computeNormalizedStamina();
 
     changeColor();
-}
-void Agent::changeColor(void){
-    shape.setFillColor(sf::Color::White);
-    if(inputVector(nnParam::seeBulletIndex) == nnParam::floatTrue) shape.setFillColor(sf::Color::Blue);
-    if(inputVector(nnParam::seeAgentIndex) == nnParam::floatTrue) shape.setFillColor(sf::Color::Green);
-    if(inputVector(nnParam::sightsIndex) == nnParam::floatTrue) shape.setFillColor(sf::Color::Red);
-
 }
 
 void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){

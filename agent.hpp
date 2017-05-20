@@ -77,7 +77,6 @@ private:
 
     DNA dna;
     Eigen::VectorXf inputVector;
-    void changeColor();
 };
 
 #endif // AGENT_HPP

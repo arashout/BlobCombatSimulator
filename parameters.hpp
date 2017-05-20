@@ -1,6 +1,7 @@
 #ifndef PARAMETERS_HPP
 #define PARAMETERS_HPP
 
+#include <SFML/Graphics/Color.hpp>
 #include <vector>
 
 namespace simParams {
@@ -31,7 +32,7 @@ namespace nnParam {
     const unsigned short sightsIndex = 0;
     const unsigned short seeAgentIndex = 1;
     const unsigned short seeBulletIndex = 2;
-    const unsigned short shotTimerIndex = 3;
+    const unsigned short canShootIndex = 3;
     const unsigned short posXIndex = 4;
     const unsigned short posYIndex = 5;
     const unsigned short staminaIndex = 6;
@@ -67,8 +68,12 @@ namespace bulletParams {
     const float radius = 3;
 }
 
-namespace statusBars {
+namespace statusParams {
     const unsigned width = 5;
-    const float margin = 5;
+    const float xMargin = 5;
+    const float yMargin = 10;
+    const float orbRadius = 5;
+    const sf::Color seeAgentColor(255, 100, 0);
+
 }
 #endif // PARAMETERS_HPP
