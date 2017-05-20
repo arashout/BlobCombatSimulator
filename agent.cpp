@@ -50,8 +50,10 @@ void Agent::draw(sf::RenderTarget& target, sf::RenderStates states) const{
 
 void Agent::update(const sf::RenderWindow &window){
     fov.update(shape.getRotation(), eye.getPosition());
-    // Mirror edges - Like in PACMAN
-    resetPosition(outOfBounds(window, shape.getRadius()), window, shape.getRadius());
+
+    bool isOutOfBounds = EDGE::INSIDE != anyOutOfBounds(window, shape.getRadius());
+    //mirrorEdges(isOutOfBounds, window, shape.getRadius());
+    if(isOutOfBounds) shape.setPosition(lastPosition);
     // Either shot is charged or is recharging
     if(shotTimer >= agentParams::shotChargeFrames) {
         canShoot = true;
@@ -67,6 +69,7 @@ void Agent::update(const sf::RenderWindow &window){
 }
 
 void Agent::express(std::unordered_map<std::string, Bullet>& bulletMap){
+    lastPosition = shape.getPosition(); // Remember last position before movement occurs
     if(id=="Player") applyInputs(bulletMap);
     else{
         dna.brain.feedforward(inputVector);

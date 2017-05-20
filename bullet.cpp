@@ -26,7 +26,7 @@ void Bullet::update(const sf::RenderWindow &window){
     sf::Vector2f newPosition = shape.getPosition() + velocity;
     shape.setPosition(newPosition);
 
-    if(EDGE::INSIDE != outOfBounds(window, shape.getRadius())) expired = true;
+    if(EDGE::INSIDE != completelyOutOfBounds(window, shape.getRadius())) expired = true;
 }
 bool Bullet::isExpired(void) const{
     return expired;

@@ -23,8 +23,7 @@ public:
 
     virtual std::string getId(void) const{return id;}
 
-    virtual EDGE outOfBounds(const sf::RenderWindow& window,
-                             float characterLength) const
+    virtual EDGE completelyOutOfBounds(const sf::RenderWindow& window,float characterLength) const
     {
         sf::Vector2f position = shape.getPosition();
         // Ensure that entity is completely out of bounds THUS
@@ -39,7 +38,20 @@ public:
         else if(topMost > window.getSize().y) return EDGE::BOTTOM;
         else return EDGE::INSIDE;
     }
-    virtual void resetPosition(const EDGE edge, const sf::RenderWindow& window, const float r)
+    virtual EDGE anyOutOfBounds(const sf::RenderWindow& window,float characterLength) const
+    {
+        sf::Vector2f position = shape.getPosition();
+        float rightMost = position.x + characterLength;
+        float leftMost = position.x - characterLength;
+        float bottomMost = position.y + characterLength;
+        float topMost = position.y - characterLength;
+        if(leftMost < 0) return EDGE::LEFT;
+        else if(topMost < 0) return EDGE::TOP;
+        else if(rightMost > window.getSize().x) return EDGE::RIGHT;
+        else if(bottomMost > window.getSize().y) return EDGE::BOTTOM;
+        else return EDGE::INSIDE;
+    }
+    virtual void mirrorEdges(const EDGE edge, const sf::RenderWindow& window, const float r)
     {
         sf::Vector2f position = shape.getPosition();
         // Switch statement that resets the entity position based on which "edge"

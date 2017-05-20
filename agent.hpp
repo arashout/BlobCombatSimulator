@@ -53,6 +53,8 @@ private:
 
     unsigned shotTimer;
 
+    sf::Vector2f lastPosition; // Use this for checking if out of bounds
+
     void setup(unsigned genNum);
     void applyInputs(std::unordered_map<std::string, Bullet>& bulletMap);
     void thrust(const float direction);
