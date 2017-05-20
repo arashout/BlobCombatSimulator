@@ -11,7 +11,8 @@ SOURCES += main.cpp \
     fieldofvision.cpp \
     dna.cpp \
     neuralnetwork.cpp \
-    simulation.cpp
+    simulation.cpp \
+    statusindicator.cpp
 
 LIBS += -L"/home/arash/SFML/lib"
 
@@ -36,4 +37,5 @@ HEADERS += \
     simulation.hpp \
     parameters.hpp \
     dna.hpp \
-    fieldofvision.hpp
+    fieldofvision.hpp \
+    statusindicator.hpp
