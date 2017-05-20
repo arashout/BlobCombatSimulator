@@ -54,7 +54,7 @@ namespace agentParams {
     const float agentRadius = 15;
     const unsigned shotChargeFrames = gameParams::normalFPS*1; // Number of frames
     const float eyeRadius = 3;
-    const unsigned numLives = 3;
+    const int maxHealth = 3;
 }
 
 namespace bulletParams {

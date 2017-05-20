@@ -49,7 +49,7 @@ private:
     bool isDead;
     bool canShoot;
     float numHits;
-    float numHitten;
+    int health;
 
     unsigned shotTimer;
 

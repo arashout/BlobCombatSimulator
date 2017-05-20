@@ -27,7 +27,7 @@ void Agent::setup(unsigned genNum)
     isDead = false;
     canShoot = false;
     numHits = 0;
-    numHitten = 0;
+    health = agentParams::maxHealth;
     shotTimer = agentParams::shotChargeFrames;
 
     const float &r = agentParams::agentRadius;
@@ -115,10 +115,6 @@ void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletMap,const bool 
     }
 }
 
-void Agent::setId(const std::string newId){
-    id = newId;
-}
-
 bool Agent::canSeeEntity(const Entity &thatEntity) const{
     return fov.canSeeEntity(*this, thatEntity);
 }
@@ -166,8 +162,8 @@ void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){
 
             bool isBulletCollision = SFMLVector::circToCircCollision(b.getShape(),shape);
             if(isBulletCollision){
-                numHitten++;
-                if(numHitten > agentParams::numLives) isDead = true;
+                health--;
+                if(health < 1) isDead = true;
                 b.incrementHits();
                 b.setExpiry(true);
             }
@@ -194,6 +190,10 @@ sf::Vector2f Agent::computeNormalizedPosition(const sf::Vector2f &pos, const flo
     float normY = pos.y/yMax;
     return sf::Vector2f(normX, normY);
 }
+// Getters and setters
+void Agent::setId(const std::string newId){
+    id = newId;
+}
 
 void Agent::setPosition(const sf::Vector2f p){
     shape.setPosition(p);
@@ -213,6 +213,6 @@ void Agent::incrementHits(void){
 }
 
 float Agent::computeFitness(void) const{
-    float fitness = 2*numHits - numHitten;
+    float fitness = 2*numHits + health;
     return fitness;
 }
