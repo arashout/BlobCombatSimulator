@@ -81,7 +81,7 @@ void Agent::express(std::unordered_map<std::string, Bullet>& bulletMap){
         bool rotateLeft = outputVector(nnParam::rotateLeftIndex) == nnParam::floatTrue;
         if(rotateRight && rotateLeft){} // Attempt to remove bias of turning a certain direction
         else if(rotateRight) rotate(1);
-        else if(rotateLeft) rotate(1);
+        else if(rotateLeft) rotate(-1);
     }
 }
 
