@@ -1,15 +1,21 @@
 #include "game.hpp"
 #include "sfmlvector.hpp"
 #include "parameters.hpp"
+#include <string>
+#include <sstream>
+
+
 
 #include <iostream>
-Game::Game(sf::RenderWindow &window, std::unordered_map<std::string, Agent> &agents) :
-      mWindow(window), allAgents(agents)
+Game::Game(sf::RenderWindow &window, std::unordered_map<std::string, Agent> &agents, sf::RenderWindow &secondWindow) :
+      mWindow(window), mSecondWindow(secondWindow), allAgents(agents)
 {
     float xSize = mWindow.getSize().x;
     float ySize = mWindow.getSize().y;
     sf::Vector2f screenMidpoint(xSize/2, ySize/2);
     float r = xSize/2 - xSize/10;
+
+    setupTexts();
 
     // Circle used for spawning agents
     spawnCircle.setRadius(r);
@@ -41,6 +47,9 @@ void Game::run(int &simSpeed){
     sf::Clock clock;
     sf::Time time;
 
+    std::string gameSpeedString;
+    std::string fpsString;
+
     // run the program as long as the window is open
     while (mWindow.isOpen())
     {
@@ -53,17 +62,43 @@ void Game::run(int &simSpeed){
         mWindow.clear(sf::Color::Black);
 
         updatePhase();
+
+        fpsString = "FPS: " + std::to_string(1.0f/time.asSeconds());
+        fpsText.setString(fpsString);
+        gameSpeedString = "Gamespeed " + std::to_string(simSpeed);
+        gameSpeedText.setString(gameSpeedString);
+
         deletionPhase();
+
         drawPhase();
+        drawInfoWindow();
 
         // end the current frame
         mWindow.display();
+
 
         // Last agent remaining marks end of game
         if(deadAgents.size() >= (allAgents.size() - 1)) break;
         // If time limit reached
         if(totalFrames > gameParams::framesPerGame) break;
+
     }
+}
+
+void Game::setupTexts()
+{
+    extern sf::Font globalFont;
+
+    fpsText.setFont(globalFont);
+    fpsText.setFont(globalFont);
+    fpsText.setFillColor(sf::Color::White);
+    fpsText.setCharacterSize(25);
+    fpsText.setPosition(0, 30);
+
+    gameSpeedText.setFont(globalFont);
+    gameSpeedText.setFillColor(sf::Color::White);
+    gameSpeedText.setCharacterSize(25);
+    gameSpeedText.setPosition(0, 0);
 }
 void Game::updatePhase(){
     // Agent Updates
@@ -90,6 +125,14 @@ void Game::deletionPhase(void){
         bulletMap.erase(bulletId);
     }
     bulletDeletionSet.clear();
+}
+
+void Game::drawInfoWindow(void)
+{
+    mSecondWindow.clear(sf::Color::Black);
+    mSecondWindow.draw(fpsText);
+    mSecondWindow.draw(gameSpeedText);
+    mSecondWindow.display();
 }
 
 void Game::drawPhase(void){

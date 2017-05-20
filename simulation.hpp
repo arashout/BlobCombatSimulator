@@ -11,8 +11,8 @@ class Simulation
 public:
     Simulation();
 private:
-    void singleGame(std::unordered_map<std::string, Agent> &batchAgents, sf::RenderWindow &window);
-    std::vector<Agent> singleRound(sf::RenderWindow &window, std::vector<Agent> &agentPop);
+    void singleGame(std::unordered_map<std::string, Agent> &batchAgents, sf::RenderWindow &window, sf::RenderWindow &secondWindow);
+    std::vector<Agent> singleRound(std::vector<Agent> &agentPop, sf::RenderWindow &window, sf::RenderWindow &secondWindow);
     std::vector<Agent> initializePopulation(unsigned genNum);
     std::vector<Agent> initializePopulation(unsigned genNum, std::vector<Agent> winners);
     std::vector<Agent> propSelection(std::vector<Agent> &agents);

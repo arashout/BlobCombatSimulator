@@ -12,10 +12,11 @@ Simulation::Simulation() {
     simSpeed = 1;
 
     sf::RenderWindow mainWindow(sf::VideoMode(gameParams::windowWidth, gameParams::windowHeight), "Blob Combat Simulator!");
+    sf::RenderWindow secondWindow(sf::VideoMode(300, 100), "Game Information");
     // Initialize generation 0 population
     std::vector<Agent> currentPopulation = initializePopulation(0);
     for(size_t i = 1; i <= simParams::numGenerations; i++){
-        std::vector<Agent> testedAgentPopulation = singleRound(mainWindow, currentPopulation);
+        std::vector<Agent> testedAgentPopulation = singleRound(currentPopulation, mainWindow, secondWindow);
         std::vector<Agent> selectedPopulation = rankSelection(testedAgentPopulation);
         std::cout << "Tested Population scores" << std::endl;
         printScoreBoard(testedAgentPopulation);
@@ -26,7 +27,7 @@ Simulation::Simulation() {
     }
 }
 
-std::vector<Agent> Simulation::singleRound(sf::RenderWindow &window, std::vector<Agent> &agentPop){
+std::vector<Agent> Simulation::singleRound(std::vector<Agent> &agentPop, sf::RenderWindow &window, sf::RenderWindow &secondWindow){
     std::unordered_map<std::string, Agent> currentBatch;
 
     std::vector<Agent> testedPopulation;
@@ -38,7 +39,7 @@ std::vector<Agent> Simulation::singleRound(sf::RenderWindow &window, std::vector
         currentBatch.insert(std::make_pair(a.getId(), a));
 
         if(counter % simParams::batchSize == 0){
-            singleGame(currentBatch, window);
+            singleGame(currentBatch, window, secondWindow);
             // Re-create agent vector
             for(auto &kv : currentBatch){
                 Agent &agent = kv.second;
@@ -53,8 +54,8 @@ std::vector<Agent> Simulation::singleRound(sf::RenderWindow &window, std::vector
 }
 
 void Simulation::singleGame(std::unordered_map<std::string, Agent> &batchAgents,
-                            sf::RenderWindow &window){
-    Game game(window, batchAgents);
+                            sf::RenderWindow &window, sf::RenderWindow &secondWindow){
+    Game game(window, batchAgents, secondWindow);
     game.run(simSpeed);
 }
 
