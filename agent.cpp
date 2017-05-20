@@ -182,7 +182,7 @@ void Agent::checkAgents(const std::unordered_map<std::string, Agent> &agentMap){
 
     for(auto &kv2 : agentMap){
         const Agent &thatAgent = kv2.second;
-        if( thatAgent.getId() != id){
+        if(!thatAgent.hasDied() && thatAgent.getId() != id){
             if(hasAgentInSights(thatAgent)) inputVector(nnParam::sightsIndex) = nnParam::floatTrue;
             if(canSeeEntity(thatAgent)) inputVector(nnParam::seeAgentIndex) = nnParam::floatTrue;
         }
