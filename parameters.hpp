@@ -12,9 +12,9 @@ namespace simParams {
 
 namespace gameParams {
     const int normalFPS = 30;
-    const unsigned framesPerGame = normalFPS*15;
-    const unsigned windowWidth = 800;
-    const unsigned windowHeight = 800;
+    const unsigned framesPerGame = normalFPS*30;
+    const unsigned windowWidth = 600;
+    const unsigned windowHeight = 600;
 }
 
 namespace fovParams {

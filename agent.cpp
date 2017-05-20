@@ -144,6 +144,15 @@ void Agent::fillInputVector(
                 );
     inputVector(nnParam::posXIndex) = normalizedPosition.x;
     inputVector(nnParam::posYIndex) = normalizedPosition.y;
+
+    changeColor();
+}
+void Agent::changeColor(void){
+    shape.setFillColor(sf::Color::White);
+    if(inputVector(nnParam::seeBulletIndex) == nnParam::floatTrue) shape.setFillColor(sf::Color::Blue);
+    if(inputVector(nnParam::seeAgentIndex) == nnParam::floatTrue) shape.setFillColor(sf::Color::Green);
+    if(inputVector(nnParam::sightsIndex) == nnParam::floatTrue) shape.setFillColor(sf::Color::Red);
+
 }
 
 void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){
@@ -153,7 +162,7 @@ void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){
         Bullet &b = kvBullet.second;
         // If it's not your own bullet
         if(id != b.getParentId()){
-            if(canSeeEntity(b)) inputVector(nnParam::seeBulletIndex) = nnParam::seeBulletIndex;
+            if(canSeeEntity(b)) inputVector(nnParam::seeBulletIndex) = nnParam::floatTrue;
 
             bool isBulletCollision = SFMLVector::circToCircCollision(b.getShape(),shape);
             if(isBulletCollision){
