@@ -24,8 +24,8 @@ void gameTest(void){
 int main()
 {
     globalFont.loadFromFile("/home/arash/Documents/BlobCombatSimulator/arial.ttf");
-    //Simulation s;
-    gameTest();
+    Simulation s;
+    //gameTest();
     return 0;
 }
 

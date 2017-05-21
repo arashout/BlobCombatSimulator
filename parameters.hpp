@@ -60,8 +60,8 @@ namespace agentParams {
     const int healthMax = 3;
 
     const float rotationCost = .5f;
-    const float thrustCost = 2;
-    const float shootCost = 3;
+    const float thrustCost = .5f;
+    const float shootCost = 10;
     const float staminaMax = 100.0f;
     const float staminaRegen = .3f;
 }
