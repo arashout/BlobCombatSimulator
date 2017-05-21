@@ -6,7 +6,7 @@
 
 namespace simParams {
     const unsigned numBatches = 10;
-    const unsigned batchSize = 3;
+    const unsigned batchSize = 2;
     const unsigned numGenerations = 100;
     const float rankProbability = .3f;
 }
@@ -19,17 +19,17 @@ namespace gameParams {
 }
 
 namespace fovParams {
-    const float viewingAngle = 60;
-    const float sightDistance = 150;
-    const float viewingDistance = 300;
+    const float maxViewAngle = 60;
+    const float viewingDistance = gameParams::windowWidth;
 }
 
 namespace nnParam {
     const float floatTrue = 1.0f;
     const float floatFalse = 0.0f;
+    const float threshold = 0.5f;
 
     const unsigned numInputs = 7;
-    const unsigned short sightsIndex = 0;
+    const unsigned short viewAngleInputIndex = 0;
     const unsigned short seeAgentIndex = 1;
     const unsigned short seeBulletIndex = 2;
     const unsigned short canShootIndex = 3;
@@ -37,11 +37,12 @@ namespace nnParam {
     const unsigned short posYIndex = 5;
     const unsigned short staminaIndex = 6;
 
-    const unsigned numOutputs = 4;
+    const unsigned numOutputs = 5;
     const unsigned short shootIndex = 0;
     const unsigned short thrustIndex = 1;
     const unsigned short rotateLeftIndex = 2;
     const unsigned short rotateRightIndex = 3;
+    const unsigned short viewAngleOutputIndex = 4;
 
     const std::vector<unsigned> topology {numInputs, 10, 10, numOutputs};
 }
@@ -57,13 +58,13 @@ namespace agentParams {
     const unsigned shotChargeFrames = gameParams::normalFPS*.1; // Number of frames
     const float eyeRadius = 3;
 
-    const int healthMax = 3;
+    const int healthMax = 10;
 
-    const float rotationCost = .5f;
-    const float thrustCost = .5f;
+    const float rotationCost = 0.0f;
+    const float thrustCost = 0.0f;
     const float shootCost = 10;
     const float staminaMax = 100.0f;
-    const float staminaRegen = .3f;
+    const float staminaRegen = .5f;
 }
 
 namespace bulletParams {

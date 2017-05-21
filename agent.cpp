@@ -75,16 +75,19 @@ void Agent::express(std::unordered_map<std::string, Bullet>& bulletMap){
     else{
         dna.brain.feedforward(inputVector);
         Eigen::VectorXf outputVector = dna.brain.computePrediction();
-        bool thrustForward = outputVector(nnParam::thrustIndex) == nnParam::floatTrue;
-        bool rotateRight = outputVector(nnParam::rotateRightIndex) == nnParam::floatTrue;
-        bool rotateLeft = outputVector(nnParam::rotateLeftIndex) == nnParam::floatTrue;
-        bool wantsToShoot = outputVector(nnParam::shootIndex) == nnParam::floatTrue;
+        const bool thrustForward = outputVector(nnParam::thrustIndex) > nnParam::threshold;
+        const bool rotateRight = outputVector(nnParam::rotateRightIndex) > nnParam::threshold;
+        const bool rotateLeft = outputVector(nnParam::rotateLeftIndex) > nnParam::threshold;
+        const bool wantsToShoot = outputVector(nnParam::shootIndex) > nnParam::threshold;
 
         if(wantsToShoot) shoot(bulletMap);
         if(thrustForward) thrust();
         if(rotateRight && rotateLeft){} // Attempt to remove bias of turning a certain direction
         else if(rotateRight) rotate(1);
         else if(rotateLeft) rotate(-1);
+        // New viewing angle
+        const float normalizedViewAngle = outputVector(nnParam::viewAngleOutputIndex);
+        fov.setViewAngle(normalizedViewAngle*fovParams::maxViewAngle);
     }
 }
 
@@ -95,6 +98,9 @@ void Agent::applyInputs(std::unordered_map<std::string, Bullet>& bulletMap){
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) rotate(-1);
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) shoot(bulletMap);
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::E)) fov.setViewAngle(fov.getViewAngle() + 1);
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) fov.setViewAngle(fov.getViewAngle() - 1);
 }
 
 void Agent::thrust(void){
@@ -126,7 +132,7 @@ void Agent::shoot(std::unordered_map<std::string, Bullet>& bulletMap){
     }
 }
 
-void Agent::fillInputVector(
+void Agent::setInputs(
         const std::unordered_map<std::string, Agent>& agentMap,
         std::unordered_map<std::string, Bullet>& bulletMap,
         const sf::RenderWindow &window){
@@ -143,7 +149,7 @@ void Agent::fillInputVector(
                 );
     inputVector(nnParam::posXIndex) = normalizedPosition.x;
     inputVector(nnParam::posYIndex) = normalizedPosition.y;
-
+    inputVector(nnParam::viewAngleInputIndex) = computeNormalizedViewAngle();
     inputVector(nnParam::staminaIndex) = computeNormalizedStamina();
 }
 
@@ -169,13 +175,11 @@ void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){
 
 void Agent::checkAgents(const std::unordered_map<std::string, Agent> &agentMap){
     // Agent Field of vision checks!
-    inputVector(nnParam::sightsIndex) = nnParam::floatFalse;
     inputVector(nnParam::seeAgentIndex) = nnParam::floatFalse;
 
     for(auto &kv2 : agentMap){
         const Agent &thatAgent = kv2.second;
         if(!thatAgent.hasDied() && thatAgent.getId() != id){
-            if(hasAgentInSights(thatAgent)) inputVector(nnParam::sightsIndex) = nnParam::floatTrue;
             if(canSeeEntity(thatAgent)) inputVector(nnParam::seeAgentIndex) = nnParam::floatTrue;
         }
     }
@@ -190,14 +194,15 @@ bool Agent::canSeeEntity(const Entity &thatEntity) const{
     return fov.canSeeEntity(*this, thatEntity);
 }
 
-bool Agent::hasAgentInSights(const Agent &thatAgent) const{
-    return fov.hasAgentInSights(thatAgent);
-}
-
 sf::Vector2f Agent::computeNormalizedPosition(const sf::Vector2f &pos, const float xMax, const float yMax) const{
     float normX = pos.x/xMax;
     float normY = pos.y/yMax;
     return sf::Vector2f(normX, normY);
+}
+
+float Agent::computeNormalizedViewAngle() const
+{
+    return fov.getViewAngle()/fovParams::maxViewAngle;
 }
 
 float Agent::computeNormalizedStamina(void) const{

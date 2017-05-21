@@ -68,7 +68,7 @@ void NeuralNetwork::feedforward(const Eigen::VectorXf &inputs){
 
 Eigen::VectorXf NeuralNetwork::computePrediction(void) const{
     const Eigen::VectorXf &lastLayer = layers.back();
-    return lastLayer.unaryExpr(std::ptr_fun(predictionFunction));
+    return lastLayer;
 }
 
 void NeuralNetwork::displayLayers(void) const{

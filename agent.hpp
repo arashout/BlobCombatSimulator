@@ -34,7 +34,7 @@ public:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     bool canSeeEntity(const Entity &thatEntity) const;
 
-    void fillInputVector(
+    void setInputs(
             const std::unordered_map<std::string, Agent> &agentMap,
             std::unordered_map<std::string, Bullet> &bulletMap,
             const sf::RenderWindow &window
@@ -50,7 +50,6 @@ private:
     static long idCount;
     bool isDead;
     bool canShoot;
-    int numHits;
     int health;
     float stamina;
 
@@ -73,11 +72,11 @@ private:
 
     void checkBullets(std::unordered_map<std::string, Bullet> &bulletMap);
     void checkAgents(const std::unordered_map<std::string, Agent> &agentMap);
-    bool hasAgentInSights(const Agent &thatAgent) const;
 
     // Helpers
     float computeNormalizedStamina(void) const;
     sf::Vector2f computeNormalizedPosition(const sf::Vector2f &pos, const float xMax, const float yMax) const;
+    float computeNormalizedViewAngle(void) const;
     bool passStaminaCheck(const float cost);
 };
 

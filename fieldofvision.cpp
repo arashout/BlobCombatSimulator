@@ -13,13 +13,12 @@ FieldOfVision::FieldOfVision(){
     ray1[1] = sf::Vertex(sf::Vector2f(0,0), sf::Color::Green);
     ray2[0] = sf::Vertex(sf::Vector2f(0,0), sf::Color::Green);
     ray2[1] = sf::Vertex(sf::Vector2f(0,0), sf::Color::Green);
-    raySights[0] = sf::Vertex(sf::Vector2f(0,0), sf::Color::Red);
-    raySights[1] = sf::Vertex(sf::Vector2f(0,0), sf::Color::Red);
+
+    viewAngle = fovParams::maxViewAngle;
 }
 void FieldOfVision::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     target.draw(ray1, 2, sf::Lines);
     target.draw(ray2, 2, sf::Lines);
-    target.draw(raySights, 2, sf::Lines);
     UNUSED(states);
 }
 void FieldOfVision::update(const float heading, const sf::Vector2f &position){
@@ -29,7 +28,7 @@ void FieldOfVision::update(const float heading, const sf::Vector2f &position){
     curHeadingVector = SFMLVector::vectorHeading(heading);
 }
 
-bool FieldOfVision::canSeeEntity(const Agent &thisAgent, const Entity &thatEntity) const{
+bool FieldOfVision::canSeeEntity(const Agent &thisAgent,const Entity &thatEntity) const{
     // Check that agent is within viewing distance
     sf::Vector2f agentToEntity = thatEntity.getPosition() - thisAgent.getPosition();
     if(SFMLVector::magnitude(agentToEntity) > fovParams::viewingDistance) return false;
@@ -37,34 +36,37 @@ bool FieldOfVision::canSeeEntity(const Agent &thisAgent, const Entity &thatEntit
     // Within viewing angle
     sf::Vector2f agentToEntityNorm = SFMLVector::normalize(agentToEntity);
     float angle = acos(SFMLVector::dot(curHeadingVector,agentToEntityNorm))*RAD2DEG;
-    if(angle < fovParams::viewingAngle) return true;
+    if(angle < viewAngle) return true;
     else return false;
 }
-bool FieldOfVision::hasAgentInSights(const Agent &thatAgent) const{
-    sf::Vector2f lineSight[2] =  {raySights[0].position, raySights[1].position};
-    if(SFMLVector::lineCircleCollision(lineSight, thatAgent.getShape())){
-        return true;
-    }
-    else return false;
+
+float FieldOfVision::getViewAngle(void) const
+{
+    return viewAngle;
 }
+
+void FieldOfVision::setViewAngle(const float newViewAngle)
+{
+    if(newViewAngle < 0 || newViewAngle > fovParams::maxViewAngle) throw "Error";
+    viewAngle = newViewAngle;
+}
+
 void FieldOfVision::updateRays(const float heading, const sf::Vector2f &position){
     // Update ray 1 position
     ray1[0].position = position;
-    float rayAngle = (heading - fovParams::viewingAngle)*DEG2RAD;
+    float rayAngle1 = (heading - viewAngle)*DEG2RAD;
     sf::Vector2f endPoint1(
-                position.x + std::sin(rayAngle)*fovParams::viewingDistance,
-                position.y - std::cos(rayAngle)*fovParams::viewingDistance
+                position.x + std::sin(rayAngle1)*fovParams::viewingDistance,
+                position.y - std::cos(rayAngle1)*fovParams::viewingDistance
                 );
     ray1[1].position = endPoint1;
+
     // Update ray 2 position
     ray2[0].position = position;
-    rayAngle = (heading + fovParams::viewingAngle)*DEG2RAD;
+    float rayAngle2 = (heading + viewAngle)*DEG2RAD;
     sf::Vector2f endPoint2 = sf::Vector2f(
-                position.x + std::sin(rayAngle)*fovParams::viewingDistance,
-                position.y - std::cos(rayAngle)*fovParams::viewingDistance
+                position.x + std::sin(rayAngle2)*fovParams::viewingDistance,
+                position.y - std::cos(rayAngle2)*fovParams::viewingDistance
                 );
     ray2[1].position = endPoint2;
-    // Update sights position
-    raySights[0].position = position;
-    raySights[1] = curHeadingVector*fovParams::sightDistance + position;
 }

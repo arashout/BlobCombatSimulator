@@ -105,7 +105,7 @@ void Game::updatePhase(){
     for(auto &kv : allAgents){
         Agent &thisAgent = kv.second;
         if(!thisAgent.hasDied()){
-            thisAgent.fillInputVector(allAgents, bulletMap, mWindow);
+            thisAgent.setInputs(allAgents, bulletMap, mWindow);
             thisAgent.express(bulletMap);
             thisAgent.update(mWindow);
         }

@@ -11,7 +11,6 @@ StatusIndicator::StatusIndicator()
     // TODO: List based orbs? Hard-coding is annoying
     seeAgentOrb.setRadius(statusParams::orbRadius);
     seeBulletOrb.setRadius(statusParams::orbRadius);
-    sightAgentOrb.setRadius(statusParams::orbRadius);
     canShootOrb.setRadius(statusParams::orbRadius);
 }
 
@@ -27,8 +26,7 @@ void StatusIndicator::update(const sf::Vector2f &agentPos, const Eigen::VectorXf
     const sf::Vector2f orbPos(agentPos.x - r, agentPos.y - (r + my));
     seeAgentOrb.setPosition(orbPos);
     seeBulletOrb.setPosition(orbPos.x + 2*ro, orbPos.y);
-    sightAgentOrb.setPosition(orbPos.x + 4*ro, orbPos.y);
-    canShootOrb.setPosition(orbPos.x + 6*ro, orbPos.y);
+    canShootOrb.setPosition(orbPos.x + 4*ro, orbPos.y);
 
     // Update fill
     sf::Vector2f fillVector(statusParams::width, heightMax*inputVector(nnParam::staminaIndex));
@@ -46,11 +44,6 @@ void StatusIndicator::update(const sf::Vector2f &agentPos, const Eigen::VectorXf
     else seeBulletOrb.setFillColor(sf::Color::Black);
 
 
-    if(inputVector(nnParam::sightsIndex) == nnParam::floatTrue) {
-        sightAgentOrb.setFillColor(sf::Color::Red);
-    }
-    else sightAgentOrb.setFillColor(sf::Color::Black);
-
     if(inputVector(nnParam::canShootIndex) == nnParam::floatTrue) {
         canShootOrb.setFillColor(sf::Color::Magenta);
     }
@@ -62,7 +55,6 @@ void StatusIndicator::draw(sf::RenderTarget &target, sf::RenderStates states) co
     target.draw(staminaBar);
     target.draw(seeAgentOrb);
     target.draw(seeBulletOrb);
-    target.draw(sightAgentOrb);
     target.draw(canShootOrb);
 
     UNUSED(states);
