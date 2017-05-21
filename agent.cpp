@@ -62,6 +62,10 @@ void Agent::update(const sf::RenderWindow &window){
     }
     // Stamina regen
     if(stamina < agentParams::staminaMax) stamina += agentParams::staminaRegen;
+    // Health
+    health -= agentParams::healthDecay;
+    if(health < 0) isDead = true;
+
     // Calculate new eye position
     sf::Vector2f heading = SFMLVector::vectorHeading(shape.getRotation());
     eye.setPosition(shape.getPosition() + heading*shape.getRadius());
@@ -142,15 +146,17 @@ void Agent::setInputs(
     checkBullets(bulletMap);
 
     inputVector(nnParam::canShootIndex) = static_cast<float>(canShoot);
-    sf::Vector2f normalizedPosition = computeNormalizedPosition(
-                shape.getPosition(),
-                window.getSize().x,
-                window.getSize().y
-                );
-    inputVector(nnParam::posXIndex) = normalizedPosition.x;
-    inputVector(nnParam::posYIndex) = normalizedPosition.y;
     inputVector(nnParam::viewAngleInputIndex) = computeNormalizedViewAngle();
     inputVector(nnParam::staminaIndex) = computeNormalizedStamina();
+    inputVector(nnParam::healthIndex) = computeNormalizedHealth();
+
+//    sf::Vector2f normalizedPosition = computeNormalizedPosition(
+//                shape.getPosition(),
+//                window.getSize().x,
+//                window.getSize().y
+//                );
+//    inputVector(nnParam::posXIndex) = normalizedPosition.x;
+//    inputVector(nnParam::posYIndex) = normalizedPosition.y;
 }
 
 void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){
@@ -164,8 +170,7 @@ void Agent::checkBullets(std::unordered_map<std::string, Bullet> &bulletMap){
 
             bool isBulletCollision = SFMLVector::circToCircCollision(b.getShape(),shape);
             if(isBulletCollision){
-                health--;
-                if(health < 1) isDead = true;
+                health -= bulletParams::bulletDamage;
                 b.incrementHits();
                 b.setExpiry(true);
             }
@@ -209,6 +214,10 @@ float Agent::computeNormalizedStamina(void) const{
     return stamina/agentParams::staminaMax;
 }
 
+float Agent::computeNormalizedHealth(void) const{
+    return health/agentParams::healthMax;
+}
+
 // Getters and setters
 void Agent::setId(const std::string newId){
     id = newId;
@@ -228,7 +237,7 @@ bool Agent::hasDied() const
 }
 
 void Agent::incrementHealth(void){
-    health++;
+    health += bulletParams::bulletDamage;
 }
 
 int Agent::getHealth(void) const{

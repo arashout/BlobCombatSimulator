@@ -28,14 +28,15 @@ namespace nnParam {
     const float floatFalse = 0.0f;
     const float threshold = 0.5f;
 
-    const unsigned numInputs = 7;
+    const unsigned numInputs = 6;
     const unsigned short viewAngleInputIndex = 0;
     const unsigned short seeAgentIndex = 1;
     const unsigned short seeBulletIndex = 2;
     const unsigned short canShootIndex = 3;
-    const unsigned short posXIndex = 4;
-    const unsigned short posYIndex = 5;
-    const unsigned short staminaIndex = 6;
+    const unsigned short staminaIndex = 4;
+    const unsigned short healthIndex = 5;
+    const unsigned short posXIndex = 6;
+    const unsigned short posYIndex = 7;
 
     const unsigned numOutputs = 5;
     const unsigned short shootIndex = 0;
@@ -55,14 +56,15 @@ namespace agentParams {
     const float thrustVelocity = 150/gameParams::normalFPS;
     const float rotationVelocity = 100/gameParams::normalFPS;
     const float agentRadius = 15;
-    const unsigned shotChargeFrames = gameParams::normalFPS*.1; // Number of frames
+    const unsigned shotChargeFrames = gameParams::normalFPS*1; // Number of frames
     const float eyeRadius = 3;
 
-    const int healthMax = 10;
+    const float healthMax = 100;
+    const float healthDecay = .25f;
 
-    const float rotationCost = 0.0f;
-    const float thrustCost = 0.0f;
-    const float shootCost = 10;
+    const float rotationCost = 0.1f;
+    const float thrustCost = 0.1f;
+    const float shootCost = 30;
     const float staminaMax = 100.0f;
     const float staminaRegen = .5f;
 }
@@ -70,6 +72,7 @@ namespace agentParams {
 namespace bulletParams {
     const float baseSpeed = 450/gameParams::normalFPS;
     const float radius = 3;
+    const float bulletDamage = 10;
 }
 
 namespace statusParams {

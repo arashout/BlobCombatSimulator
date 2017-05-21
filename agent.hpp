@@ -50,7 +50,7 @@ private:
     static long idCount;
     bool isDead;
     bool canShoot;
-    int health;
+    float health;
     float stamina;
 
     sf::CircleShape eye;
@@ -78,6 +78,7 @@ private:
     sf::Vector2f computeNormalizedPosition(const sf::Vector2f &pos, const float xMax, const float yMax) const;
     float computeNormalizedViewAngle(void) const;
     bool passStaminaCheck(const float cost);
+    float computeNormalizedHealth() const;
 };
 
 #endif // AGENT_HPP

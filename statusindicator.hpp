@@ -13,6 +13,7 @@ public:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 private:
     sf::RectangleShape staminaBar;
+    sf::RectangleShape healthBar;
     sf::CircleShape seeAgentOrb;
     sf::CircleShape seeBulletOrb;
     sf::CircleShape canShootOrb;
